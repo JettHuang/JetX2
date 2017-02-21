@@ -1,0 +1,185 @@
+// \brief
+//		OpenGL renderer base on core3.3
+//
+
+#ifndef __JETX_OPENGL_RENDERER_H__
+#define __JETX_OPENGL_RENDERER_H__
+
+#include <map>
+#include <vector>
+#include "Renderer/Renderer.h"
+#include "OpenGLState.h"
+#include "OpenGLDataBuffer.h"
+
+
+//FOpenGLRenderer
+class FOpenGLRenderer : public FRenderer
+{
+public:
+	FOpenGLRenderer() {}
+
+	//Init
+	virtual void Init(FOutputDevice *LogOutputDevice) override;
+	virtual void Shutdown() override;
+
+	//Capabilities
+	virtual void DumpCapabilities() override;
+
+//render viewport
+	virtual FRHIViewportRef RHICreateViewport(void* InWindowHandle, uint32_t SizeX, uint32_t SizeY, bool bIsFullscreen) override;
+	virtual void RHIResizeViewport(FRHIViewportRef InViewport, uint32_t SizeX, uint32_t SizeY, bool bIsFullscreen) override;
+	
+	virtual bool RHIGetAvailableResolutions(FScreenResolutionArray& Resolutions, bool bIgnoreRefreshRate) override;
+	virtual void RHIGetSupportedResolution(uint32_t& Width, uint32_t& Height) override;
+
+//Resource Creating
+	// states
+	virtual FRHISamplerStateRef RHICreateSamplerState(const FSamplerStateInitializerRHI &SamplerStateInitializer) override;
+	virtual FRHIRasterizerStateRef RHICreateRasterizerState(const FRasterizerStateInitializerRHI &RasterizerStateInitializer) override;
+	virtual FRHIDepthStencilStateRef RHICreateDepthStencilState(const FDepthStencilStateInitializerRHI &DepthStencilStateInitializer) override;
+	virtual FRHIBlendStateRef RHICreateBlendState(const FBlendStateInitializerRHI &BlendStateInitializer) override;
+
+	// vertex buffers
+	virtual FRHIVertexBufferRef RHICreateVertexBuffer(uint32_t InBytes, const void *InData, EBufferAccess InAccess, EBufferUsage InUsage);
+	virtual FRHIIndexBufferRef RHICreateIndexBuffer(uint32_t InBytes, const void *InData, uint16_t InStride, EBufferAccess InAccess, EBufferUsage InUsage);
+
+	virtual void FillDataBuffer(FRHIDataBufferRef InBuffer, uint32_t InOffset, uint32_t InBytes, const void *InData);
+	virtual void* LockDataBuffer(FRHIDataBufferRef InBuffer, uint32_t InOffset, uint32_t InBytes, EBufferLockMode InMode);
+	virtual void UnLockDataBuffer(FRHIDataBufferRef InBuffer);
+
+	// textures
+	//virtual FRHITexture2DRef RHICreateTexture2D() override;
+
+//State Setting
+	virtual void RHISetSamplerState(uint32_t InTexIndex, const FRHISamplerStateRef &InSamplerState) override;
+	virtual void RHISetRasterizerState(const FRHIRasterizerStateRef &InRasterizerState) override;
+	virtual void RHISetDepthStencilState(const FRHIDepthStencilStateRef &InDepthStencilState, int32_t InStencilRef) override;
+	virtual void RHISetBlendState(const FRHIBlendStateRef &InBlendState, const FLinearColor &InBlendColor) override;
+
+	virtual void RHISetViewport(int32_t InX, int32_t InY, int32_t InWidth, int32_t InHeight, float InMinZ, float InMaxZ) override;
+	virtual void RHISetScissorRect(int32_t InX, int32_t InY, int32_t InWidth, int32_t InHeight) override;
+
+//Draw Commands
+	virtual void RHIBeginDrawingViewport(FRHIViewportRef Viewport) override;
+	virtual void RHIEndDrawingViewport(FRHIViewportRef Viewport, bool bPresent, bool bLockToVsync) override;
+	virtual void RHIBeginFrame() override;
+	virtual void RHIEndFrame() override;
+
+	virtual void RHIClear(bool bClearColor, const FLinearColor &InColor, bool bClearDepth, float InDepth, bool bClearStencil, int32_t InStencil) override;
+	virtual void RHIClearMRT(bool bClearColor, const FLinearColor *InColors, uint32_t InColorsNum, bool bClearDepth, float InDepth, bool bClearStencil, int32_t InStencil) override;
+
+	// draw primitives
+	virtual void DrawIndexedPrimitive(const FRHIIndexBufferRef &InIndexBuffer, EPrimitiveType InMode, uint32_t InStart, uint32_t InCount) override;
+	virtual void DrawIndexedPrimitiveInstanced(const FRHIIndexBufferRef &InIndexBuffer, EPrimitiveType InMode, uint32_t InStart, uint32_t InCount, uint32_t InInstances) override;
+	virtual void DrawArrayedPrimitive(EPrimitiveType InMode, uint32_t InStart, uint32_t InCount) override;
+	virtual void DrawArrayedPrimitiveInstanced(EPrimitiveType InMode, uint32_t InStart, uint32_t InCount, uint32_t InInstances) override;
+
+//Others
+	void AddViewport(class FRHIOpenGLViewport *InViewport);
+	void RemoveViewport(class FRHIOpenGLViewport *InViewport);
+
+	void CachedBindBuffer(EBufferBindTarget InBindPoint, GLuint InBuffer);
+	void OnBufferDeleted(EBufferBindTarget InBindPoint, GLuint InBuffer);
+
+//Helpers
+	bool CheckError(const char* FILE, int LINE);
+
+	static const char* LookupShaderAttributeTypeName(GLenum InType);
+	static const char* LookupShaderUniformTypeName(GLenum InType);
+	static const char* LookupErrorCode(GLenum InError);
+
+protected:
+	void UpdatePendingRasterizerState(bool bForce=false);
+	void UpdatePendingSamplers(bool bForce=false);
+	void UpdatePendingDepthStencilState(bool bForce=false);
+	void UpdatePendingBlendState(bool bForce=false);
+
+protected:
+	struct FIntRect
+	{
+		FIntRect() 
+			: x(0)
+			, y(0)
+			, width(0)
+			, height(0)
+		{}
+
+		GLint x, y, width, height;
+	};
+	struct FViewportBox
+	{
+		FViewportBox()
+			: x(0)
+			, y(0)
+			, width(0)
+			, height(0)
+			, zMin(0.f)
+			, zMax(1.f)
+		{}
+
+		GLint x, y, width, height;
+		GLfloat zMin, zMax;
+	};
+
+	// Render Context
+	struct FRenderContext
+	{
+		// viewport
+		FIntRect					ScissorRect;
+		GLboolean					bEnableScissorTest;
+		FViewportBox				ViewportBox;
+
+		FRHIOpenGLRasterizerStateRef	RasterizerState;
+		FRHIOpenGLSamplerStateRef		TextureSamplers[MaxTextureUnits];
+		
+		FRHIOpenGLDepthStencilStateRef	DepthStencilState;
+		GLint							StencilRef;
+
+		FRHIOpenGLBlendStateRef		BlendState;
+		FOpenGLBlendStateData		BlendStateCache;
+		FLinearColor				BlendColor;
+
+		GLuint						SharedVAO;
+		GLuint						BufferBinds[MaxBufferBinds];
+	};
+
+	// Pending States Set to execute
+	struct FPendingStatesSet
+	{
+		FPendingStatesSet() {}
+
+		FRHIOpenGLRasterizerStateRef	RasterizerState;
+		FRHIOpenGLSamplerStateRef		TextureSamplers[MaxTextureUnits];
+
+		FRHIOpenGLDepthStencilStateRef	DepthStencilState;
+		GLint							StencilRef;
+
+		FRHIOpenGLBlendStateRef			BlendState;
+		FLinearColor					BlendColor;
+	};
+
+protected:
+	FOutputDevice *Logger;
+
+	std::vector<class FRHIOpenGLViewport*>	Viewports;
+	class FPlatformOpenGLContext *OpenGLContext;
+	class FRHIOpenGLViewport *ViewportDrawing;
+
+	FRenderContext			RenderContext;
+	FPendingStatesSet		PendingStatesSet;
+
+	std::map<FSamplerStateInitializerRHI, FRHISamplerStateRef> SamplerStateCache;
+	std::map<FRasterizerStateInitializerRHI, FRHIRasterizerStateRef> RasterizerStateCache;
+	std::map<FDepthStencilStateInitializerRHI, FRHIDepthStencilStateRef> DepthStencilStateCache;
+	std::map<FBlendStateInitializerRHI, FRHIBlendStateRef> BlendStateCache;
+
+	//capabilities
+	GLint		cap_MajorVersion;
+	GLint		cap_MinorVersion;
+	GLint		cap_GL_MAX_TEXTURE_IMAGE_UNITS;
+	GLint		cap_GL_MAX_DRAW_BUFFERS;
+	GLint		cap_GL_MAX_ELEMENTS_VERTICES;
+	GLint		cap_GL_MAX_ELEMENTS_INDICES;
+};
+
+#endif //__JETX_OPENGL_RENDERER_H__
