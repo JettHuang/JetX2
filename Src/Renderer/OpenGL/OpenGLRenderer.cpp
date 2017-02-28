@@ -723,14 +723,6 @@ void FOpenGLRenderer::OnBufferDeleted(EBufferBindTarget InBindPoint, GLuint InBu
 		}
 	}
 		break;
-	case ElementArray_Buffer:
-	{
-		if (RenderContext.VAOState.ElementArrayBuffer == InBuffer)
-		{
-			RenderContext.VAOState.ElementArrayBuffer = 0;
-		}
-	}
-		break;
 	default:
 		break;
 	}

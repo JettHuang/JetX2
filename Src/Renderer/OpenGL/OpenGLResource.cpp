@@ -9,23 +9,25 @@
 // vertex buffers
 FRHIVertexBufferRef FOpenGLRenderer::RHICreateVertexBuffer(uint32_t InBytes, const void *InData, EBufferAccess InAccess, EBufferUsage InUsage)
 {
-	FRHIOpenGLVertexBufferRef VBuffer = new FRHIOpenGLVertexBuffer(this);
+	FRHIOpenGLVertexBuffer *VBuffer = new FRHIOpenGLVertexBuffer(this);
 	if (VBuffer && VBuffer->Initialize(InBytes, InData, InAccess, InUsage))
 	{
 		return VBuffer;
 	}
 
+	delete VBuffer;
 	return nullptr;
 }
 
 FRHIIndexBufferRef FOpenGLRenderer::RHICreateIndexBuffer(uint32_t InBytes, const void *InData, uint16_t InStride, EBufferAccess InAccess, EBufferUsage InUsage)
 {
-	FRHIOpenGLIndexBufferRef IBuffer = new FRHIOpenGLIndexBuffer(this);
+	FRHIOpenGLIndexBuffer *IBuffer = new FRHIOpenGLIndexBuffer(this);
 	if (IBuffer && IBuffer->Initialize(InBytes, InData, InStride, InAccess, InUsage))
 	{
 		return IBuffer;
 	}
 
+	delete IBuffer;
 	return nullptr;
 }
 
