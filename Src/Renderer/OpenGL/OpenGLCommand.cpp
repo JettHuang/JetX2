@@ -8,6 +8,29 @@
 #include "OpenGLState.h"
 
 
+static GLenum TranslatePrimitiveType(EPrimitiveType InType)
+{
+	switch (InType)
+	{
+	case PT_Points:
+		return GL_POINTS;
+	case PT_Lines:
+		return GL_LINES;
+	case PT_LineStrips:
+		return GL_LINE_STRIP;
+	case PT_LineLoops:
+		return GL_LINE_LOOP;
+	case PT_Triangles:
+		return GL_TRIANGLES;
+	case PT_TriangleStrips:
+		return GL_TRIANGLE_STRIP;
+	case PT_TriangleFans:
+		return GL_TRIANGLE_FAN;
+	default:
+		return GL_NONE;
+	}
+}
+
 void FOpenGLRenderer::RHISetSamplerState(uint32_t InTexIndex, const FRHISamplerStateRef &InSamplerState)
 {
 	if (InSamplerState.IsValidRef())
@@ -187,23 +210,74 @@ void FOpenGLRenderer::RHIClearMRT(bool bClearColor, const FLinearColor *InColors
 	}
 }
 
+void FOpenGLRenderer::SetVertexStreamSource(uint32_t InStreamIndex, const FRHIVertexBufferRef &InVertexBuffer)
+{
+	assert(InStreamIndex < MaxVertexStreamSources);
+
+	FRHIOpenGLVertexBuffer *OpenGLVertexBuffer = dynamic_cast<FRHIOpenGLVertexBuffer*>(InVertexBuffer.DeRef());
+
+	if (PendingStatesSet.VertexStreams[InStreamIndex].DeRef() != OpenGLVertexBuffer)
+	{
+		PendingStatesSet.VertexStreamsDirty = GL_TRUE;
+		PendingStatesSet.VertexStreams[InStreamIndex] = OpenGLVertexBuffer;
+	}
+}
+
+void FOpenGLRenderer::SetVertexInputLayout(const FRHIVertexDeclarationRef &InVertexDecl)
+{
+	FRHIOpenGLVertexDeclaration *OpenGLVertexDecl = dynamic_cast<FRHIOpenGLVertexDeclaration*>(InVertexDecl.DeRef());
+	if (PendingStatesSet.VertexDecl.DeRef() != OpenGLVertexDecl)
+	{
+		PendingStatesSet.VertexDeclDirty = GL_TRUE;
+		PendingStatesSet.VertexDecl = OpenGLVertexDecl;
+	}
+}
+
+
 // draw primitives
 void FOpenGLRenderer::DrawIndexedPrimitive(const FRHIIndexBufferRef &InIndexBuffer, EPrimitiveType InMode, uint32_t InStart, uint32_t InCount)
 {
-
+	FOpenGLRenderer::DrawIndexedPrimitiveInstanced(InIndexBuffer, InMode, InStart, InCount, 1);
 }
 
 void FOpenGLRenderer::DrawIndexedPrimitiveInstanced(const FRHIIndexBufferRef &InIndexBuffer, EPrimitiveType InMode, uint32_t InStart, uint32_t InCount, uint32_t InInstances)
 {
+	// update pending state
+	UpdatePendingRasterizerState();
+	UpdatePendingSamplers();
+	UpdatePendingDepthStencilState();
+	UpdatePendingBlendState();
+	UpdatePendingVertexInputLayout();
+	// TODO: update texture & shader
 
+	// emit draw command
+	FRHIOpenGLIndexBuffer *OpenGLIndexBuffer = dynamic_cast<FRHIOpenGLIndexBuffer*>(InIndexBuffer.DeRef());
+	assert(OpenGLIndexBuffer);
+
+	GLenum IndexType = OpenGLIndexBuffer->GetStride() == sizeof(GLushort) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
+	GLuint StartPtr = InStart * OpenGLIndexBuffer->GetStride();
+
+	CachedBindBuffer(ElementArray_Buffer, OpenGLIndexBuffer->NativeResource());
+	glDrawElementsInstanced(TranslatePrimitiveType(InMode), InCount, IndexType, (GLvoid*)StartPtr, InInstances);
+	CheckError(__FILE__, __LINE__);
 }
 
 void FOpenGLRenderer::DrawArrayedPrimitive(EPrimitiveType InMode, uint32_t InStart, uint32_t InCount)
 {
-
+	FOpenGLRenderer::DrawArrayedPrimitiveInstanced(InMode, InStart, InCount, 1);
 }
 
 void FOpenGLRenderer::DrawArrayedPrimitiveInstanced(EPrimitiveType InMode, uint32_t InStart, uint32_t InCount, uint32_t InInstances)
 {
+	// update pending state
+	UpdatePendingRasterizerState();
+	UpdatePendingSamplers();
+	UpdatePendingDepthStencilState();
+	UpdatePendingBlendState();
+	UpdatePendingVertexInputLayout();
+	// TODO: update texture & shader
 
+	// emit draw command
+	glDrawArraysInstanced(TranslatePrimitiveType(InMode), InStart, InCount, InInstances);
+	CheckError(__FILE__, __LINE__);
 }

@@ -273,11 +273,41 @@ struct FScreenResolution
 
 typedef std::vector<FScreenResolution> FScreenResolutionArray;
 
+// vertex element
+struct FVertexElement
+{
+	uint16_t 		StreamIndex;
+	uint16_t 		AttributeIndex;
+	uint16_t 		Offset;
+	uint16_t 		Stride;
+	uint16_t		Divisor;		// none zero for instancing.
+	EVertexElementType	DataType;
+
+	FVertexElement() {}
+	FVertexElement(uint16_t InStreamIndex, uint16_t InAttriIndex, uint16_t InOffset, uint16_t InStride, uint16_t InDivisor, EVertexElementType InType)
+		: StreamIndex(InStreamIndex)
+		, AttributeIndex(InAttriIndex)
+		, Offset(InOffset)
+		, Stride(InStride)
+		, Divisor(InDivisor)
+		, DataType(InType)
+	{
+	}
+};
+
+typedef std::vector<FVertexElement>		FVertexElementsList;
 
 /** The number of render-targets that may be simultaneously written to. */
 enum { MaxSimultaneousRenderTargets = 8 };
 
 /** The number of texture units */
 enum { MaxTextureUnits = 8 };
+
+/** The number of vertex input stream slot */
+enum { MaxVertexStreamSources = 16 };
+
+/** The number of vertex attributes */
+enum { MaxVertexAttributes = 16 };
+
 
 #endif // __JETX_RENDERER_DEFS_H__

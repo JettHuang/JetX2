@@ -10,6 +10,7 @@
 #include "Renderer/Renderer.h"
 #include "OpenGLState.h"
 #include "OpenGLDataBuffer.h"
+#include "OpenGLVertexDeclaration.h"
 
 
 //FOpenGLRenderer
@@ -40,12 +41,15 @@ public:
 	virtual FRHIBlendStateRef RHICreateBlendState(const FBlendStateInitializerRHI &BlendStateInitializer) override;
 
 	// vertex buffers
-	virtual FRHIVertexBufferRef RHICreateVertexBuffer(uint32_t InBytes, const void *InData, EBufferAccess InAccess, EBufferUsage InUsage);
-	virtual FRHIIndexBufferRef RHICreateIndexBuffer(uint32_t InBytes, const void *InData, uint16_t InStride, EBufferAccess InAccess, EBufferUsage InUsage);
+	virtual FRHIVertexBufferRef RHICreateVertexBuffer(uint32_t InBytes, const void *InData, EBufferAccess InAccess, EBufferUsage InUsage) override;
+	virtual FRHIIndexBufferRef RHICreateIndexBuffer(uint32_t InBytes, const void *InData, uint16_t InStride, EBufferAccess InAccess, EBufferUsage InUsage) override;
 
-	virtual void FillDataBuffer(FRHIDataBufferRef InBuffer, uint32_t InOffset, uint32_t InBytes, const void *InData);
-	virtual void* LockDataBuffer(FRHIDataBufferRef InBuffer, uint32_t InOffset, uint32_t InBytes, EBufferLockMode InMode);
-	virtual void UnLockDataBuffer(FRHIDataBufferRef InBuffer);
+	virtual void FillDataBuffer(FRHIDataBufferRef InBuffer, uint32_t InOffset, uint32_t InBytes, const void *InData) override;
+	virtual void* LockDataBuffer(FRHIDataBufferRef InBuffer, uint32_t InOffset, uint32_t InBytes, EBufferLockMode InMode) override;
+	virtual void UnLockDataBuffer(FRHIDataBufferRef InBuffer) override;
+
+	// vertex input layout
+	virtual FRHIVertexDeclarationRef RHICreateVertexInputLayout(const FVertexElement *InVertexElements, uint32_t InCount) override;
 
 	// textures
 	//virtual FRHITexture2DRef RHICreateTexture2D() override;
@@ -58,6 +62,9 @@ public:
 
 	virtual void RHISetViewport(int32_t InX, int32_t InY, int32_t InWidth, int32_t InHeight, float InMinZ, float InMaxZ) override;
 	virtual void RHISetScissorRect(int32_t InX, int32_t InY, int32_t InWidth, int32_t InHeight) override;
+
+	virtual void SetVertexStreamSource(uint32_t InStreamIndex, const FRHIVertexBufferRef &InVertexBuffer) override;
+	virtual void SetVertexInputLayout(const FRHIVertexDeclarationRef &InVertexDecl) override;
 
 //Draw Commands
 	virtual void RHIBeginDrawingViewport(FRHIViewportRef Viewport) override;
@@ -93,6 +100,9 @@ protected:
 	void UpdatePendingSamplers(bool bForce=false);
 	void UpdatePendingDepthStencilState(bool bForce=false);
 	void UpdatePendingBlendState(bool bForce=false);
+	void UpdatePendingVertexInputLayout(bool bForce=false);
+
+	void CachedEnableVertexAttributePointer(GLuint InBuffer, const FOpenGLVertexElement &InVertexElement);
 
 protected:
 	struct FIntRect
@@ -121,6 +131,40 @@ protected:
 		GLfloat zMin, zMax;
 	};
 
+	// Vertex Input Attribute
+	struct FVertexInputAttribute
+	{
+		GLuint		Buffer;
+		GLint		Size;
+		GLenum		Type;
+		GLsizei		Stride;
+		GLuint		Offset;
+		GLuint		Divisor;
+		GLboolean	Normalized;
+		GLboolean	ShouldConvertToFloat;
+		GLboolean	Enabled;
+
+		FVertexInputAttribute()
+			: Buffer(0)
+			, Size(0)
+			, Type(GL_NONE)
+			, Stride(0)
+			, Offset(0)
+			, Divisor(0)
+			, Normalized(GL_FALSE)
+			, ShouldConvertToFloat(GL_FALSE)
+			, Enabled(GL_FALSE)
+		{
+		}
+	};
+
+	// VAO State
+	struct FVertexArrayObjectState
+	{
+		FVertexInputAttribute	VertexInputAttris[MaxVertexAttributes];
+		// GLuint					ElementArrayBuffer;  /* it is same with Element-array BufferBind Point */
+	};
+
 	// Render Context
 	struct FRenderContext
 	{
@@ -141,6 +185,9 @@ protected:
 
 		GLuint						SharedVAO;
 		GLuint						BufferBinds[MaxBufferBinds];
+
+		// Vertex Input Attributes
+		FVertexArrayObjectState		VAOState;
 	};
 
 	// Pending States Set to execute
@@ -156,6 +203,12 @@ protected:
 
 		FRHIOpenGLBlendStateRef			BlendState;
 		FLinearColor					BlendColor;
+
+		// Vertex Inputs
+		FRHIOpenGLVertexDeclarationRef	VertexDecl;
+		FRHIOpenGLVertexBufferRef		VertexStreams[MaxVertexStreamSources];
+		GLboolean						VertexDeclDirty;
+		GLboolean						VertexStreamsDirty;
 	};
 
 protected:

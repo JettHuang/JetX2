@@ -29,3 +29,11 @@
 # Others
 *.log
 *.suo
+*.tlog
+*.lastbuildstate
+*.idb
+*.pdb
+*.opendb
+*.ilk
+*.VC.db
+

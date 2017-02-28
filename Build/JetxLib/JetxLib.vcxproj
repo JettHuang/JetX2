@@ -27,6 +27,7 @@
     <ClCompile Include="..\..\Src\Renderer\OpenGL\OpenGLRenderer.cpp" />
     <ClCompile Include="..\..\Src\Renderer\OpenGL\OpenGLResource.cpp" />
     <ClCompile Include="..\..\Src\Renderer\OpenGL\OpenGLState.cpp" />
+    <ClCompile Include="..\..\Src\Renderer\OpenGL\OpenGLVertexDeclaration.cpp" />
     <ClCompile Include="..\..\Src\Renderer\OpenGL\OpenGLViewport.cpp" />
     <ClCompile Include="..\..\Src\Renderer\OpenGL\OpenGLWindows.cpp" />
     <ClCompile Include="..\..\Src\Renderer\Renderer.cpp" />
@@ -40,6 +41,7 @@
     <ClInclude Include="..\..\Src\Renderer\OpenGL\OpenGLDataBuffer.h" />
     <ClInclude Include="..\..\Src\Renderer\OpenGL\OpenGLRenderer.h" />
     <ClInclude Include="..\..\Src\Renderer\OpenGL\OpenGLState.h" />
+    <ClInclude Include="..\..\Src\Renderer\OpenGL\OpenGLVertexDeclaration.h" />
     <ClInclude Include="..\..\Src\Renderer\OpenGL\OpenGLViewport.h" />
     <ClInclude Include="..\..\Src\Renderer\OpenGL\OpenGLWindows.h" />
     <ClInclude Include="..\..\Src\Renderer\Renderer.h" />

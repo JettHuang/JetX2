@@ -57,3 +57,8 @@ void FOpenGLRenderer::UnLockDataBuffer(FRHIDataBufferRef InBuffer)
 		return OpenGLBuffer->UnLock();
 	}
 }
+
+FRHIVertexDeclarationRef FOpenGLRenderer::RHICreateVertexInputLayout(const FVertexElement *InVertexElements, uint32_t InCount)
+{
+	return new FRHIOpenGLVertexDeclaration(InVertexElements, InCount);
+}

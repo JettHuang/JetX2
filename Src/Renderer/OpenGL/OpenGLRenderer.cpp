@@ -106,6 +106,10 @@ void FOpenGLRenderer::Init(FOutputDevice *LogOutputDevice)
 	{
 		RenderContext.BufferBinds[k] = 0;
 	}
+
+	// Vertex Inputs
+	PendingStatesSet.VertexDeclDirty = true;
+	PendingStatesSet.VertexStreamsDirty = true;
 }
 
 void FOpenGLRenderer::Shutdown()
@@ -114,6 +118,25 @@ void FOpenGLRenderer::Shutdown()
 	{
 		glDeleteVertexArrays(1, &RenderContext.SharedVAO);
 	}
+
+	// release resource
+	RenderContext.RasterizerState.SafeRelease();
+	RenderContext.DepthStencilState.SafeRelease();
+	RenderContext.BlendState.SafeRelease();
+	PendingStatesSet.RasterizerState.SafeRelease();
+	PendingStatesSet.DepthStencilState.SafeRelease();
+	PendingStatesSet.BlendState.SafeRelease();
+	for (uint32_t Index = 0; Index < MaxTextureUnits; Index++)
+	{
+		RenderContext.TextureSamplers[Index].SafeRelease();
+		PendingStatesSet.TextureSamplers[Index].SafeRelease();
+	}
+
+	for (uint32_t Index = 0; Index < MaxVertexStreamSources; Index++)
+	{
+		PendingStatesSet.VertexStreams[Index].SafeRelease();
+	}
+	PendingStatesSet.VertexDecl.SafeRelease();
 
 	PlatformShutdownOpenGLContext(*OpenGLContext);
 	ViewportDrawing = nullptr;
@@ -579,8 +602,95 @@ void FOpenGLRenderer::UpdatePendingBlendState(bool bForce)
 	PendingStatesSet.BlendState = nullptr;
 }
 
+void FOpenGLRenderer::UpdatePendingVertexInputLayout(bool bForce)
+{
+	bool bNeedUpdate = PendingStatesSet.VertexDeclDirty || PendingStatesSet.VertexStreamsDirty || bForce;
+	if (!bNeedUpdate)
+	{
+		return;
+	}
+
+	assert(PendingStatesSet.VertexDecl.IsValidRef());
+
+	GLboolean VertexAttrisEnables[MaxVertexAttributes] = { GL_FALSE };
+	const FOpenGLVertexElementsList &VertexElementList = PendingStatesSet.VertexDecl->VertexInputLayout;
+	for (size_t Index = 0; Index < VertexElementList.size(); Index++)
+	{
+		const FOpenGLVertexElement &Element = VertexElementList[Index];
+		const GLuint kStreamIndex = Element.StreamIndex;
+		const GLuint kAttriIndex = Element.AttributeIndex;
+
+		assert(kAttriIndex < MaxVertexAttributes);
+		assert(kStreamIndex < MaxVertexStreamSources);
+
+		FRHIOpenGLVertexBuffer *SourceStream = PendingStatesSet.VertexStreams[kStreamIndex];
+		assert(SourceStream);
+
+		CachedEnableVertexAttributePointer(SourceStream->NativeResource(), Element);
+		VertexAttrisEnables[kAttriIndex] = GL_TRUE;
+	} // end for
+
+	for (GLuint Index = 0; Index < MaxVertexAttributes; Index++)
+	{
+		if (VertexAttrisEnables[Index] == GL_FALSE && RenderContext.VAOState.VertexInputAttris[Index].Enabled)
+		{
+			glDisableVertexAttribArray(Index);
+			CheckError(__FILE__, __LINE__);
+			RenderContext.VAOState.VertexInputAttris[Index].Enabled = GL_FALSE;
+		}
+	} // end for
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Others
+
+void FOpenGLRenderer::CachedEnableVertexAttributePointer(GLuint InBuffer, const FOpenGLVertexElement &InVertexElement)
+{
+	const GLuint kAttriIndex = InVertexElement.AttributeIndex;
+	FVertexInputAttribute &CurrentInputAttribute = RenderContext.VAOState.VertexInputAttris[kAttriIndex];
+
+	if (CurrentInputAttribute.Buffer != InBuffer ||
+		CurrentInputAttribute.Type != InVertexElement.Type ||
+		CurrentInputAttribute.Size != InVertexElement.Size ||
+		CurrentInputAttribute.Stride != InVertexElement.Stride ||
+		CurrentInputAttribute.Offset != InVertexElement.Offset ||
+		CurrentInputAttribute.ShouldConvertToFloat != InVertexElement.ShouldConvertToFloat ||
+		CurrentInputAttribute.Normalized != InVertexElement.Normalized)
+	{
+		CachedBindBuffer(Array_Buffer, InBuffer);
+		if (InVertexElement.ShouldConvertToFloat)
+		{
+			glVertexAttribPointer(kAttriIndex, InVertexElement.Size, InVertexElement.Type, InVertexElement.Normalized, InVertexElement.Stride, (GLvoid*)InVertexElement.Offset);
+		}
+		else
+		{
+			glVertexAttribIPointer(kAttriIndex, InVertexElement.Size, InVertexElement.Type, InVertexElement.Stride, (GLvoid*)InVertexElement.Offset);
+		}
+		CheckError(__FILE__, __LINE__);
+
+		CurrentInputAttribute.Buffer = InBuffer;
+		CurrentInputAttribute.Type = InVertexElement.Type;
+		CurrentInputAttribute.Size = InVertexElement.Size;
+		CurrentInputAttribute.Stride = InVertexElement.Stride;
+		CurrentInputAttribute.Offset = InVertexElement.Offset;
+		CurrentInputAttribute.Normalized = InVertexElement.Normalized;
+	}
+
+	if (CurrentInputAttribute.Divisor != InVertexElement.Divisor)
+	{
+		glVertexAttribDivisor(kAttriIndex, InVertexElement.Divisor);
+		CurrentInputAttribute.Divisor = InVertexElement.Divisor;
+	}
+
+	if (!CurrentInputAttribute.Enabled)
+	{
+		glEnableVertexAttribArray(kAttriIndex);
+		CheckError(__FILE__, __LINE__);
+
+		CurrentInputAttribute.Enabled = GL_TRUE;
+	}
+}
+
 
 
 void FOpenGLRenderer::CachedBindBuffer(EBufferBindTarget InBindPoint, GLuint InBuffer)
@@ -598,6 +708,33 @@ void FOpenGLRenderer::OnBufferDeleted(EBufferBindTarget InBindPoint, GLuint InBu
 	{
 		RenderContext.BufferBinds[InBindPoint] = 0;
 	}
+	
+	switch (InBindPoint)
+	{
+	case Array_Buffer:
+	{
+		for (uint32_t Index = 0; Index < MaxVertexAttributes; Index++)
+		{
+			FVertexInputAttribute &Entry = RenderContext.VAOState.VertexInputAttris[Index];
+			if (Entry.Buffer == InBuffer)
+			{
+				Entry.Buffer = 0;
+			}
+		}
+	}
+		break;
+	case ElementArray_Buffer:
+	{
+		if (RenderContext.VAOState.ElementArrayBuffer == InBuffer)
+		{
+			RenderContext.VAOState.ElementArrayBuffer = 0;
+		}
+	}
+		break;
+	default:
+		break;
+	}
+	
 }
 
 

@@ -59,6 +59,9 @@ public:
 	virtual void* LockDataBuffer(FRHIDataBufferRef InBuffer, uint32_t InOffset, uint32_t InBytes, EBufferLockMode InMode) = 0;
 	virtual void UnLockDataBuffer(FRHIDataBufferRef InBuffer) = 0;
 
+	// vertex input layout
+	virtual FRHIVertexDeclarationRef RHICreateVertexInputLayout(const FVertexElement *InVertexElements, uint32_t InCount) = 0;
+
 	// textures
 	//virtual FRHITexture2DRef RHICreateTexture2D() = 0;
 
@@ -70,6 +73,9 @@ public:
 
 	virtual void RHISetViewport(int32_t InX, int32_t InY, int32_t InWidth, int32_t InHeight, float InMinZ, float InMaxZ) = 0;
 	virtual void RHISetScissorRect(int32_t InX, int32_t InY, int32_t InWidth, int32_t InHeight) = 0;
+
+	virtual void SetVertexStreamSource(uint32_t InStreamIndex, const FRHIVertexBufferRef &InVertexBuffer) = 0;
+	virtual void SetVertexInputLayout(const FRHIVertexDeclarationRef &InVertexDecl) = 0;
 
 //Draw Commands
 	virtual void RHIBeginDrawingViewport(FRHIViewportRef Viewport) = 0;
