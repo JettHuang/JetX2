@@ -3,6 +3,7 @@
 //
 
 #include "OpenGLDataBuffer.h"
+#include "OpenGLShader.h"
 #include "OpenGLRenderer.h"
 
 
@@ -63,4 +64,54 @@ void FOpenGLRenderer::UnLockDataBuffer(FRHIDataBufferRef InBuffer)
 FRHIVertexDeclarationRef FOpenGLRenderer::RHICreateVertexInputLayout(const FVertexElement *InVertexElements, uint32_t InCount)
 {
 	return new FRHIOpenGLVertexDeclaration(InVertexElements, InCount);
+}
+
+// shader
+FRHIVertexShaderRef FOpenGLRenderer::RHICreateVertexShader(const char *InSource, int32_t InLength)
+{
+	return new FRHIOpenGLVertexShader(InSource, InLength);
+}
+
+FRHIPixelShaderRef FOpenGLRenderer::RHICreatePixelShader(const GLchar *InSource, GLint InLength)
+{
+	return new FRHIOpenGLPixelShader(InSource, InLength);
+}
+
+FRHIGPUProgramRef FOpenGLRenderer::RHICreateGPUProgram(const FRHIVertexShaderRef &InVShader, const FRHIPixelShaderRef &InPShader)
+{
+	FRHIOpenGLGPUProgram *GPUProgram = new FRHIOpenGLGPUProgram(this);
+	if (!GPUProgram)
+	{
+		return nullptr;
+	}
+
+	GPUProgram->AddShader(InVShader.DeRef());
+	GPUProgram->AddShader(InPShader.DeRef());
+	if (!GPUProgram->Build())
+	{
+		delete GPUProgram; GPUProgram = nullptr;
+	}
+
+	return GPUProgram;
+}
+
+FRHIGPUProgramRef FOpenGLRenderer::RHICreateGPUProgram(const std::vector<FRHIShaderRef> &InShaders)
+{
+	FRHIOpenGLGPUProgram *GPUProgram = new FRHIOpenGLGPUProgram(this);
+	if (!GPUProgram)
+	{
+		return nullptr;
+	}
+
+	for (uint32_t Index = 0; Index < InShaders.size(); Index++)
+	{
+		GPUProgram->AddShader(InShaders[Index].DeRef());
+	}
+	
+	if (!GPUProgram->Build())
+	{
+		delete GPUProgram; GPUProgram = nullptr;
+	}
+
+	return GPUProgram;
 }

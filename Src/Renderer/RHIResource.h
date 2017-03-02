@@ -78,7 +78,13 @@ public:
 class FRHIShader : public FRHIResource
 {
 public:
-
+	virtual void Dump(class FOutputDevice &OutDevice) {}
+	
+	void SetName(const std::string &InName)
+	{
+		ShaderName = InName;
+	}
+	
 	std::string ShaderName;
 };
 
@@ -97,6 +103,8 @@ public:
 class FRHIGPUProgram : public FRHIResource
 {
 public:
+	virtual void Dump(class FOutputDevice &OutDevice) {}
+
 	ERHIResourceType Type() override { return RRT_GpuProgram; }
 };
 
@@ -193,6 +201,7 @@ typedef TRefCountPtr<FRHIRasterizerState> FRHIRasterizerStateRef;
 typedef TRefCountPtr<FRHIDepthStencilState> FRHIDepthStencilStateRef;
 typedef TRefCountPtr<FRHIBlendState> FRHIBlendStateRef;
 
+typedef TRefCountPtr<FRHIShader>	FRHIShaderRef;
 typedef TRefCountPtr<FRHIVertexShader> FRHIVertexShaderRef;
 typedef TRefCountPtr<FRHIPixelShader> FRHIPixelShaderRef;
 typedef TRefCountPtr<FRHIGPUProgram> FRHIGPUProgramRef;

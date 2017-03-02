@@ -26,6 +26,7 @@
     <ClCompile Include="..\..\Src\Renderer\OpenGL\OpenGLDataBuffer.cpp" />
     <ClCompile Include="..\..\Src\Renderer\OpenGL\OpenGLRenderer.cpp" />
     <ClCompile Include="..\..\Src\Renderer\OpenGL\OpenGLResource.cpp" />
+    <ClCompile Include="..\..\Src\Renderer\OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="..\..\Src\Renderer\OpenGL\OpenGLState.cpp" />
     <ClCompile Include="..\..\Src\Renderer\OpenGL\OpenGLVertexDeclaration.cpp" />
     <ClCompile Include="..\..\Src\Renderer\OpenGL\OpenGLViewport.cpp" />
@@ -40,6 +41,7 @@
     <ClInclude Include="..\..\Src\Foundation\XMemory.h" />
     <ClInclude Include="..\..\Src\Renderer\OpenGL\OpenGLDataBuffer.h" />
     <ClInclude Include="..\..\Src\Renderer\OpenGL\OpenGLRenderer.h" />
+    <ClInclude Include="..\..\Src\Renderer\OpenGL\OpenGLShader.h" />
     <ClInclude Include="..\..\Src\Renderer\OpenGL\OpenGLState.h" />
     <ClInclude Include="..\..\Src\Renderer\OpenGL\OpenGLVertexDeclaration.h" />
     <ClInclude Include="..\..\Src\Renderer\OpenGL\OpenGLViewport.h" />
@@ -105,6 +107,9 @@
     <OutDir>$(SolutionDir)..\Bin\</OutDir>
     <TargetName>$(ProjectName)d</TargetName>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)..\Bin\</OutDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>
@@ -141,7 +146,8 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Src;$(SolutionDir)..\Src\ThirdParty\includes</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

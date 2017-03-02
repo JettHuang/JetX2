@@ -54,6 +54,12 @@ public:
 	// textures
 	//virtual FRHITexture2DRef RHICreateTexture2D() override;
 
+	// shader
+	virtual FRHIVertexShaderRef RHICreateVertexShader(const char *InSource, int32_t InLength = -1) override;
+	virtual FRHIPixelShaderRef RHICreatePixelShader(const char *InSource, int32_t InLength = -1) override;
+	virtual FRHIGPUProgramRef RHICreateGPUProgram(const FRHIVertexShaderRef &InVShader, const FRHIPixelShaderRef &InPShader) override;
+	virtual FRHIGPUProgramRef RHICreateGPUProgram(const std::vector<FRHIShaderRef> &InShaders) override;
+
 //State Setting
 	virtual void RHISetSamplerState(uint32_t InTexIndex, const FRHISamplerStateRef &InSamplerState) override;
 	virtual void RHISetRasterizerState(const FRHIRasterizerStateRef &InRasterizerState) override;

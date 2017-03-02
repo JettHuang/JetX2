@@ -117,7 +117,8 @@ bool PlatformInitializeOpenGLContext(FPlatformOpenGLContext &InGLConext)
 
 	/* initialize GLEW */
 	glewExperimental = GL_TRUE;
-	assert(GLEW_OK == glewInit());
+	GLenum Result = glewInit();
+	assert(GLEW_OK == Result);
 
 	if (wglCreateContextAttribsARB)
 	{

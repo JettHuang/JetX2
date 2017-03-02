@@ -65,6 +65,12 @@ public:
 	// textures
 	//virtual FRHITexture2DRef RHICreateTexture2D() = 0;
 
+	// shader
+	virtual FRHIVertexShaderRef RHICreateVertexShader(const char *InSource, int32_t InLength = -1) = 0;
+	virtual FRHIPixelShaderRef RHICreatePixelShader(const char *InSource, int32_t InLength = -1) = 0;
+	virtual FRHIGPUProgramRef RHICreateGPUProgram(const FRHIVertexShaderRef &InVShader, const FRHIPixelShaderRef &InPShader) = 0;
+	virtual FRHIGPUProgramRef RHICreateGPUProgram(const std::vector<FRHIShaderRef> &InShaders) = 0;
+
 //State Setting
 	virtual void RHISetSamplerState(uint32_t InTexIndex, const FRHISamplerStateRef &InSamplerState) = 0;
 	virtual void RHISetRasterizerState(const FRHIRasterizerStateRef &InRasterizerState) = 0;

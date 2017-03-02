@@ -22,6 +22,12 @@ void FOpenGLRenderer::Init(FOutputDevice *LogOutputDevice)
 	PlatformInitializeOpenGLContext(*OpenGLContext);
 	ViewportDrawing = nullptr;
 
+	if (Logger)
+	{
+		Logger->Log(Log_Info, "Running on a %s from %s", glGetString(GL_RENDERER), glGetString(GL_VENDOR));
+		Logger->Log(Log_Info, "OpenGL version %s is supported", glGetString(GL_VERSION));
+	}
+
 	glGetIntegerv(GL_MAJOR_VERSION, &cap_MajorVersion);
 	glGetIntegerv(GL_MINOR_VERSION, &cap_MinorVersion);
 	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &cap_GL_MAX_TEXTURE_IMAGE_UNITS);
