@@ -13,7 +13,6 @@
 #include <vector>
 #include <GL/glew.h>
 
-
 // \brief
 //		OpenGL Shader
 class FOpenGLShader
@@ -65,13 +64,12 @@ typedef TRefCountPtr<FRHIOpenGLPixelShader>	  FRHIOpenGLPixelShaderRef;
 
 // Input Parameter of Program
 // 1. input vertex attributes
-// 2. uniform parameters
+// 2. uniform variable
 class FOpenGLProgramInput
 {
 public:
 	FOpenGLProgramInput()
-		: Name("undefined")
-		, Type(0)
+		: Type(0)
 		, Size(0)
 		, Location(-1)
 	{
@@ -92,6 +90,53 @@ public:
 	GLint			Location;
 };
 
+// uniform variable
+class FOpenGLProgramUniformInput : public FOpenGLProgramInput 
+{
+public:
+	FOpenGLProgramUniformInput();
+	FOpenGLProgramUniformInput(const GLchar* InName, GLenum InType, GLint InSize, GLint InLocation);
+
+	~FOpenGLProgramUniformInput();
+
+	bool GetModified() const { return Modified; }
+	void SetModified(bool InDirty) { Modified = InDirty; }
+
+	void* DataPtr() const { return Data; }
+	uint32_t DataBytes() const { return DataLen; }
+
+protected:
+	uint8_t		*Data;
+	uint32_t	 DataLen;
+	bool		 Modified;
+};
+
+// Uniform Input Block
+/*
+struct FUniformInputEntry
+{
+	union 
+	{
+		int32_t			IntVal;
+		tvec2<int32_t>	Int2Val;
+		tvec3<int32_t>	Int3Val;
+		tvec4<int32_t>	Int4Val;
+
+		uint32_t		UIntVal;
+		tvec2<uint32_t>	UInt2Val;
+		tvec3<uint32_t>	UInt3Val;
+		tvec4<uint32_t>	UInt4Val;
+
+		float			FltVal;
+		tvec2<float>	Flt2Val;
+		tvec3<float>	Flt3Val;
+		tvec4<float>	Flt4Val;
+
+		mat4x4			Matrix4;
+	};
+};
+*/
+
 class FRHIOpenGLGPUProgram : public FRHIGPUProgram
 {
 public:
@@ -102,12 +147,33 @@ public:
 	bool Build();
 
 	virtual void Dump(class FOutputDevice &OutDevice) override;
+	// get uniform parameter handle
+	virtual int32_t GetUniformHandle(const std::string &InName) override;
+
+	virtual bool SetUniform1iv(int32_t InHandle, const int32_t *V, uint32_t InCount) override;
+	virtual bool SetUniform2iv(int32_t InHandle, const int32_t *V, uint32_t InCount) override;
+	virtual bool SetUniform3iv(int32_t InHandle, const int32_t *V, uint32_t InCount) override;
+	virtual bool SetUniform4iv(int32_t InHandle, const int32_t *V, uint32_t InCount) override;
+
+	virtual bool SetUniform1uiv(int32_t InHandle, const uint32_t *V, uint32_t InCount) override;
+	virtual bool SetUniform2uiv(int32_t InHandle, const uint32_t *V, uint32_t InCount) override;
+	virtual bool SetUniform3uiv(int32_t InHandle, const uint32_t *V, uint32_t InCount) override;
+	virtual bool SetUniform4uiv(int32_t InHandle, const uint32_t *V, uint32_t InCount) override;
+
+	virtual bool SetUniform1fv(int32_t InHandle, const float *V, uint32_t InCount) override;
+	virtual bool SetUniform2fv(int32_t InHandle, const float *V, uint32_t InCount) override;
+	virtual bool SetUniform3fv(int32_t InHandle, const float *V, uint32_t InCount) override;
+	virtual bool SetUniform4fv(int32_t InHandle, const float *V, uint32_t InCount) override;
+
+	virtual bool SetUniformMatrix4fv(int32_t InHandle, const float *V, uint32_t InCount) override;
+
+	void UpdateUniformVariables();
 
 	GLuint NativeResource() const { return Resource; }
 	bool IsValid() const;
 
-	GLint GetUniformLocation(const std::string &InName) const;
-
+protected:
+	bool SetUniformCommon(int32_t InHandle, const void *V, uint32_t InBytes, uint32_t InCount);
 private:
 	class FOpenGLRenderer	*Renderer;
 
@@ -118,7 +184,7 @@ private:
 
 	std::vector<FRHIShaderRef>			Shaders;
 	std::vector<FOpenGLProgramInput>	Attributes;
-	std::vector<FOpenGLProgramInput>	Uniforms;
+	std::vector<FOpenGLProgramUniformInput>	Uniforms;
 };
 
 typedef TRefCountPtr<FRHIOpenGLGPUProgram>	FRHIOpenGLGPUProgramRef;

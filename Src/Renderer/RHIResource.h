@@ -6,8 +6,11 @@
 #define	__JETX_RHI_RESOURCE_H__
 
 #include <string>
+#include "glm/glm.hpp"
 #include "Foundation/JetX.h"
 #include "Foundation/RefCounting.h"
+
+using namespace glm;
 
 
 // enumeration of the different RHI reference types.
@@ -106,6 +109,26 @@ public:
 	virtual void Dump(class FOutputDevice &OutDevice) {}
 
 	ERHIResourceType Type() override { return RRT_GpuProgram; }
+
+	// get uniform parameter handle
+	virtual int32_t GetUniformHandle(const std::string &InName) = 0;
+
+	virtual bool SetUniform1iv(int32_t InHandle, const int32_t *V, uint32_t InCount) = 0;
+	virtual bool SetUniform2iv(int32_t InHandle, const int32_t *V, uint32_t InCount) = 0;
+	virtual bool SetUniform3iv(int32_t InHandle, const int32_t *V, uint32_t InCount) = 0;
+	virtual bool SetUniform4iv(int32_t InHandle, const int32_t *V, uint32_t InCount) = 0;
+
+	virtual bool SetUniform1uiv(int32_t InHandle, const uint32_t *V, uint32_t InCount) = 0;
+	virtual bool SetUniform2uiv(int32_t InHandle, const uint32_t *V, uint32_t InCount) = 0;
+	virtual bool SetUniform3uiv(int32_t InHandle, const uint32_t *V, uint32_t InCount) = 0;
+	virtual bool SetUniform4uiv(int32_t InHandle, const uint32_t *V, uint32_t InCount) = 0;
+
+	virtual bool SetUniform1fv(int32_t InHandle, const float *V, uint32_t InCount) = 0;
+	virtual bool SetUniform2fv(int32_t InHandle, const float *V, uint32_t InCount) = 0;
+	virtual bool SetUniform3fv(int32_t InHandle, const float *V, uint32_t InCount) = 0;
+	virtual bool SetUniform4fv(int32_t InHandle, const float *V, uint32_t InCount) = 0;
+
+	virtual bool SetUniformMatrix4fv(int32_t InHandle, const float *V, uint32_t InCount) = 0;
 };
 
 // program input & params
