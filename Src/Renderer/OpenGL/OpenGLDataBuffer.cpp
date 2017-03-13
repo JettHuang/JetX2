@@ -159,3 +159,8 @@ bool FRHIOpenGLIndexBuffer::Initialize(uint32_t InBytes, const void *InData, uin
 	Stride = InStride;
 	return FOpenGLBuffer::Initialize(InBytes, InData, InAccess, InUsage);
 }
+
+uint32_t FRHIOpenGLIndexBuffer::GetIndexCount()
+{
+	return (Bytes / Stride);
+}

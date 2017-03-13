@@ -11,6 +11,7 @@
 #include "OpenGLState.h"
 #include "OpenGLDataBuffer.h"
 #include "OpenGLVertexDeclaration.h"
+#include "OpenGLShader.h"
 
 
 //FOpenGLRenderer
@@ -71,6 +72,7 @@ public:
 
 	virtual void SetVertexStreamSource(uint32_t InStreamIndex, const FRHIVertexBufferRef &InVertexBuffer) override;
 	virtual void SetVertexInputLayout(const FRHIVertexDeclarationRef &InVertexDecl) override;
+	virtual void SetGPUProgram(const FRHIGPUProgramRef &InProgram) override;
 
 //Draw Commands
 	virtual void RHIBeginDrawingViewport(FRHIViewportRef Viewport) override;
@@ -95,6 +97,8 @@ public:
 	void OnBufferDeleted(EBufferBindTarget InBindPoint, GLuint InBuffer);
 
 //Helpers
+	//\brief
+	//	return true if has error.
 	bool CheckError(const char* FILE, int LINE);
 
 	static const char* LookupShaderAttributeTypeName(GLenum InType);
@@ -107,8 +111,9 @@ protected:
 	void UpdatePendingDepthStencilState(bool bForce=false);
 	void UpdatePendingBlendState(bool bForce=false);
 	void UpdatePendingVertexInputLayout(bool bForce=false);
-
 	void CachedEnableVertexAttributePointer(GLuint InBuffer, const FOpenGLVertexElement &InVertexElement);
+
+	void UpdateGPUProgram();
 
 protected:
 	struct FIntRect
@@ -194,6 +199,9 @@ protected:
 
 		// Vertex Input Attributes
 		FVertexArrayObjectState		VAOState;
+
+		// GPU Program
+		FRHIOpenGLGPUProgramRef		GPUProgram;
 	};
 
 	// Pending States Set to execute

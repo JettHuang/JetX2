@@ -233,6 +233,20 @@ void FOpenGLRenderer::SetVertexInputLayout(const FRHIVertexDeclarationRef &InVer
 	}
 }
 
+void FOpenGLRenderer::SetGPUProgram(const FRHIGPUProgramRef &InProgram)
+{
+	FRHIOpenGLGPUProgram *OpenGLProgram = dynamic_cast<FRHIOpenGLGPUProgram*>(InProgram.DeRef());
+	if (RenderContext.GPUProgram.DeRef() != OpenGLProgram)
+	{
+		GLuint Resource = 0;
+		if (OpenGLProgram)
+		{
+			Resource = OpenGLProgram->NativeResource();
+		}
+		glUseProgram(Resource);
+		RenderContext.GPUProgram = OpenGLProgram;
+	}
+}
 
 // draw primitives
 void FOpenGLRenderer::DrawIndexedPrimitive(const FRHIIndexBufferRef &InIndexBuffer, EPrimitiveType InMode, uint32_t InStart, uint32_t InCount)
@@ -248,7 +262,8 @@ void FOpenGLRenderer::DrawIndexedPrimitiveInstanced(const FRHIIndexBufferRef &In
 	UpdatePendingDepthStencilState();
 	UpdatePendingBlendState();
 	UpdatePendingVertexInputLayout();
-	// TODO: update texture & shader
+	UpdateGPUProgram();
+	// TODO: update texture
 
 	// emit draw command
 	FRHIOpenGLIndexBuffer *OpenGLIndexBuffer = dynamic_cast<FRHIOpenGLIndexBuffer*>(InIndexBuffer.DeRef());
@@ -275,7 +290,8 @@ void FOpenGLRenderer::DrawArrayedPrimitiveInstanced(EPrimitiveType InMode, uint3
 	UpdatePendingDepthStencilState();
 	UpdatePendingBlendState();
 	UpdatePendingVertexInputLayout();
-	// TODO: update texture & shader
+	UpdateGPUProgram();
+	// TODO: update texture
 
 	// emit draw command
 	glDrawArraysInstanced(TranslatePrimitiveType(InMode), InStart, InCount, InInstances);

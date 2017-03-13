@@ -83,6 +83,8 @@ public:
 	FRHIOpenGLIndexBuffer(class FOpenGLRenderer *InRenderer);
 	virtual ~FRHIOpenGLIndexBuffer() {}
 
+	virtual uint32_t GetIndexCount() override;
+
 	bool Initialize(uint32_t InBytes, const void *InData, uint16_t InStride, EBufferAccess InAccess, EBufferUsage InUsage);
 
 	// the stride must be 2 or 4

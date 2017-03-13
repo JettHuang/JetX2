@@ -191,6 +191,7 @@ class FRHIIndexBuffer : public FRHIDataBuffer
 {
 public:
 	ERHIResourceType Type() override { return RRT_IndexBuffer; }
+	virtual uint32_t GetIndexCount() = 0;
 };
 
 // frame buffer & render object

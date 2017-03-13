@@ -82,6 +82,7 @@ public:
 
 	virtual void SetVertexStreamSource(uint32_t InStreamIndex, const FRHIVertexBufferRef &InVertexBuffer) = 0;
 	virtual void SetVertexInputLayout(const FRHIVertexDeclarationRef &InVertexDecl) = 0;
+	virtual void SetGPUProgram(const FRHIGPUProgramRef &InProgram) = 0;
 
 //Draw Commands
 	virtual void RHIBeginDrawingViewport(FRHIViewportRef Viewport) = 0;
@@ -94,6 +95,7 @@ public:
 	virtual void RHIClearMRT(bool bClearColor, const FLinearColor *InColors, uint32_t InColorsNum, bool bClearDepth, float InDepth, bool bClearStencil, int32_t InStencil) = 0;
 
 	// draw primitives
+	// InCount: indices number
 	virtual void DrawIndexedPrimitive(const FRHIIndexBufferRef &InIndexBuffer, EPrimitiveType InMode, uint32_t InStart, uint32_t InCount) = 0;
 	virtual void DrawIndexedPrimitiveInstanced(const FRHIIndexBufferRef &InIndexBuffer, EPrimitiveType InMode, uint32_t InStart, uint32_t InCount, uint32_t InInstances) = 0;
 	virtual void DrawArrayedPrimitive(EPrimitiveType InMode, uint32_t InStart, uint32_t InCount) = 0;

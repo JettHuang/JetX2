@@ -143,6 +143,7 @@ void FOpenGLRenderer::Shutdown()
 		PendingStatesSet.VertexStreams[Index].SafeRelease();
 	}
 	PendingStatesSet.VertexDecl.SafeRelease();
+	RenderContext.GPUProgram.SafeRelease();
 
 	PlatformShutdownOpenGLContext(*OpenGLContext);
 	ViewportDrawing = nullptr;
@@ -645,6 +646,15 @@ void FOpenGLRenderer::UpdatePendingVertexInputLayout(bool bForce)
 			RenderContext.VAOState.VertexInputAttris[Index].Enabled = GL_FALSE;
 		}
 	} // end for
+}
+
+void FOpenGLRenderer::UpdateGPUProgram()
+{
+	assert(RenderContext.GPUProgram.IsValidRef());
+	if (RenderContext.GPUProgram.IsValidRef())
+	{
+		RenderContext.GPUProgram->UpdateUniformVariables();
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -140,7 +140,7 @@ FOpenGLProgramUniformInput::FOpenGLProgramUniformInput(const GLchar* InName, GLe
 	, Modified(false)
 {
 	DataLen = GetUniformElementSize(InType);
-	assert(DataBytes > 0);
+	assert(DataLen > 0);
 
 	Data = new uint8_t[DataLen];
 	assert(Data);
@@ -237,7 +237,7 @@ bool FRHIOpenGLGPUProgram::Build()
 		Uniforms.push_back(FOpenGLProgramUniformInput(VarName, VarType, VarSize, VarLocation));
 	} // end for
 
-	return Renderer->CheckError(__FILE__, __LINE__);
+	return !Renderer->CheckError(__FILE__, __LINE__);
 }
 
 void FRHIOpenGLGPUProgram::Dump(class FOutputDevice &OutDevice)
