@@ -75,12 +75,6 @@
     <ClCompile Include="..\..\Src\Renderer\OpenGL\Windows\OpenGLWindows.cpp">
       <Filter>Renderer\OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Src\AppFramework\AppInterface.cpp">
-      <Filter>AppFramework</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Src\AppFramework\AppWindows.cpp">
-      <Filter>AppFramework</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Src\Foundation\FileSystem.h">
@@ -130,12 +124,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Src\Renderer\OpenGL\Windows\OpenGLWindows.h">
       <Filter>Renderer\OpenGL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Src\AppFramework\AppInterface.h">
-      <Filter>AppFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Src\AppFramework\AppWindows.h">
-      <Filter>AppFramework</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

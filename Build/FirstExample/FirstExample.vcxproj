@@ -91,12 +91,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\Src;$(SolutionDir)..\Src\ThirdParty\includes</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Src;$(SolutionDir)..\Src\ThirdParty\glew\include;$(SolutionDir)..\Src\ThirdParty\glm\include;$(SolutionDir)..\Src\ThirdParty\assimp\include;$(SolutionDir)..\Src\ThirdParty\glfw\include;$(SolutionDir)..\Src\ThirdParty\SOIL\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\Src\ThirdParty\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)..\Src\ThirdParty\assimp\lib_win32;$(SolutionDir)..\Src\ThirdParty\glew\lib_win32;$(SolutionDir)..\Src\ThirdParty\glwf\lib_win32;$(SolutionDir)..\Src\ThirdParty\SOIL\lib_win32</AdditionalLibraryDirectories>
       <AdditionalDependencies>assimp.lib;glew32s.lib;opengl32.lib;SOIL.lib;JetXLibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/NODEFAULTLIB:libcmt.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
@@ -123,7 +123,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\Src;$(SolutionDir)..\Src\ThirdParty\includes</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Src;$(SolutionDir)..\Src\ThirdParty\glew\include;$(SolutionDir)..\Src\ThirdParty\glm\include;$(SolutionDir)..\Src\ThirdParty\assimp\include;$(SolutionDir)..\Src\ThirdParty\glfw\include;$(SolutionDir)..\Src\ThirdParty\SOIL\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -132,7 +132,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalOptions>/NODEFAULTLIB:libcmt.lib %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>assimp.lib;glew32s.lib;opengl32.lib;SOIL.lib;JetXLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\Src\ThirdParty\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)..\Src\ThirdParty\assimp\lib_win32;$(SolutionDir)..\Src\ThirdParty\glew\lib_win32;$(SolutionDir)..\Src\ThirdParty\glwf\lib_win32;$(SolutionDir)..\Src\ThirdParty\SOIL\lib_win32</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

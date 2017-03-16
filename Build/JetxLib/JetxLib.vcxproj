@@ -19,8 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Src\AppFramework\AppInterface.cpp" />
-    <ClCompile Include="..\..\Src\AppFramework\AppWindows.cpp" />
     <ClCompile Include="..\..\Src\Foundation\FileSystem.cpp" />
     <ClCompile Include="..\..\Src\Foundation\OutputDevice.cpp" />
     <ClCompile Include="..\..\Src\Foundation\XMemory.cpp" />
@@ -36,8 +34,6 @@
     <ClCompile Include="..\..\Src\Renderer\Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Src\AppFramework\AppInterface.h" />
-    <ClInclude Include="..\..\Src\AppFramework\AppWindows.h" />
     <ClInclude Include="..\..\Src\Foundation\FileSystem.h" />
     <ClInclude Include="..\..\Src\Foundation\JetX.h" />
     <ClInclude Include="..\..\Src\Foundation\OutputDevice.h" />
