@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Src\AppFramework\AppInterface.cpp" />
+    <ClCompile Include="..\..\Src\AppFramework\AppWindows.cpp" />
     <ClCompile Include="..\..\Src\Foundation\FileSystem.cpp" />
     <ClCompile Include="..\..\Src\Foundation\OutputDevice.cpp" />
     <ClCompile Include="..\..\Src\Foundation\XMemory.cpp" />
@@ -30,10 +32,12 @@
     <ClCompile Include="..\..\Src\Renderer\OpenGL\OpenGLState.cpp" />
     <ClCompile Include="..\..\Src\Renderer\OpenGL\OpenGLVertexDeclaration.cpp" />
     <ClCompile Include="..\..\Src\Renderer\OpenGL\OpenGLViewport.cpp" />
-    <ClCompile Include="..\..\Src\Renderer\OpenGL\OpenGLWindows.cpp" />
+    <ClCompile Include="..\..\Src\Renderer\OpenGL\Windows\OpenGLWindows.cpp" />
     <ClCompile Include="..\..\Src\Renderer\Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Src\AppFramework\AppInterface.h" />
+    <ClInclude Include="..\..\Src\AppFramework\AppWindows.h" />
     <ClInclude Include="..\..\Src\Foundation\FileSystem.h" />
     <ClInclude Include="..\..\Src\Foundation\JetX.h" />
     <ClInclude Include="..\..\Src\Foundation\OutputDevice.h" />
@@ -45,7 +49,7 @@
     <ClInclude Include="..\..\Src\Renderer\OpenGL\OpenGLState.h" />
     <ClInclude Include="..\..\Src\Renderer\OpenGL\OpenGLVertexDeclaration.h" />
     <ClInclude Include="..\..\Src\Renderer\OpenGL\OpenGLViewport.h" />
-    <ClInclude Include="..\..\Src\Renderer\OpenGL\OpenGLWindows.h" />
+    <ClInclude Include="..\..\Src\Renderer\OpenGL\Windows\OpenGLWindows.h" />
     <ClInclude Include="..\..\Src\Renderer\Renderer.h" />
     <ClInclude Include="..\..\Src\Renderer\RendererDefs.h" />
     <ClInclude Include="..\..\Src\Renderer\RendererState.h" />
@@ -116,8 +120,8 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\Src;$(SolutionDir)..\Src\ThirdParty\includes</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;GLEW_STATIC;XPLATFORM_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Src;$(SolutionDir)..\Src\ThirdParty\glew\include;$(SolutionDir)..\Src\ThirdParty\glm\include;$(SolutionDir)..\Src\ThirdParty\assimp\include;$(SolutionDir)..\Src\ThirdParty\glfw\include;$(SolutionDir)..\Src\ThirdParty\SOIL\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -146,8 +150,8 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\Src;$(SolutionDir)..\Src\ThirdParty\includes</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;GLEW_STATIC;XPLATFORM_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Src;$(SolutionDir)..\Src\ThirdParty\glew\include;$(SolutionDir)..\Src\ThirdParty\glm\include;$(SolutionDir)..\Src\ThirdParty\assimp\include;$(SolutionDir)..\Src\ThirdParty\glfw\include;$(SolutionDir)..\Src\ThirdParty\SOIL\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

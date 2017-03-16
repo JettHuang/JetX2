@@ -19,14 +19,20 @@
     <Filter Include="ThirdParty\assimp">
       <UniqueIdentifier>{dc7b3624-7a87-4590-bc0a-ff0002c427c3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ThirdParty\GL">
-      <UniqueIdentifier>{ab5cd7e2-dada-4097-8dc9-4b7ac4df7700}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ThirdParty\GLFW">
       <UniqueIdentifier>{9cc1053b-f647-43d5-947f-938c2d69dd34}</UniqueIdentifier>
     </Filter>
     <Filter Include="ThirdParty\glm">
       <UniqueIdentifier>{25c6659b-a421-41fb-afc5-9ffefa65c534}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AppFramework">
+      <UniqueIdentifier>{6be07839-c0eb-478a-820d-67b8544d5a71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\GLEW">
+      <UniqueIdentifier>{ab5cd7e2-dada-4097-8dc9-4b7ac4df7700}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\SOIL">
+      <UniqueIdentifier>{9d81cf85-2b90-4d4d-916f-ca18f331f7ec}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -54,9 +60,6 @@
     <ClCompile Include="..\..\Src\Renderer\OpenGL\OpenGLViewport.cpp">
       <Filter>Renderer\OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Src\Renderer\OpenGL\OpenGLWindows.cpp">
-      <Filter>Renderer\OpenGL</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Src\Renderer\OpenGL\OpenGLDataBuffer.cpp">
       <Filter>Renderer\OpenGL</Filter>
     </ClCompile>
@@ -68,6 +71,15 @@
     </ClCompile>
     <ClCompile Include="..\..\Src\Renderer\OpenGL\OpenGLShader.cpp">
       <Filter>Renderer\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\Renderer\OpenGL\Windows\OpenGLWindows.cpp">
+      <Filter>Renderer\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\AppFramework\AppInterface.cpp">
+      <Filter>AppFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\AppFramework\AppWindows.cpp">
+      <Filter>AppFramework</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -107,9 +119,6 @@
     <ClInclude Include="..\..\Src\Renderer\OpenGL\OpenGLViewport.h">
       <Filter>Renderer\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Src\Renderer\OpenGL\OpenGLWindows.h">
-      <Filter>Renderer\OpenGL</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Src\Renderer\OpenGL\OpenGLDataBuffer.h">
       <Filter>Renderer\OpenGL</Filter>
     </ClInclude>
@@ -118,6 +127,15 @@
     </ClInclude>
     <ClInclude Include="..\..\Src\Renderer\OpenGL\OpenGLShader.h">
       <Filter>Renderer\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\Renderer\OpenGL\Windows\OpenGLWindows.h">
+      <Filter>Renderer\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\AppFramework\AppInterface.h">
+      <Filter>AppFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Src\AppFramework\AppWindows.h">
+      <Filter>AppFramework</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

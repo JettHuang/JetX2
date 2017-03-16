@@ -8,7 +8,11 @@
 #include "OpenGLRenderer.h"
 #include "OpenGLState.h"
 #include "OpenGLViewport.h"
-#include "OpenGLWindows.h"
+
+#ifdef XPLATFORM_WINDOWS
+#include "Windows\OpenGLWindows.h"
+#endif
+
 
 
 static FPlatformOpenGLContext s_OpenGLContext;

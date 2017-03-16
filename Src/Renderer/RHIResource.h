@@ -6,11 +6,8 @@
 #define	__JETX_RHI_RESOURCE_H__
 
 #include <string>
-#include "glm/glm.hpp"
 #include "Foundation/JetX.h"
 #include "Foundation/RefCounting.h"
-
-using namespace glm;
 
 
 // enumeration of the different RHI reference types.

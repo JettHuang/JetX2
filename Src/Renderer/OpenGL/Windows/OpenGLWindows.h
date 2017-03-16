@@ -5,8 +5,8 @@
 #ifndef __JETX_OPENGL_WINDOWS_H__
 #define __JETX_OPENGL_WINDOWS_H__
 
-#include <gl/glew.h>
-#include <gl/wglew.h>
+#include "glew.h"
+#include "wglew.h"
 #include "Foundation/JetX.h"
 #include "Renderer/RendererDefs.h"
 

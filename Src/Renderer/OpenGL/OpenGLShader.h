@@ -9,9 +9,10 @@
 #include "Foundation/OutputDevice.h"
 #include "Renderer/RendererDefs.h"
 #include "Renderer/RHIResource.h"
+#include "glew.h"
 
 #include <vector>
-#include <GL/glew.h>
+
 
 // \brief
 //		OpenGL Shader

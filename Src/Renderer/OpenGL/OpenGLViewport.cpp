@@ -4,8 +4,10 @@
 
 #include "OpenGLViewport.h"
 #include "OpenGLRenderer.h"
-#include "OpenGLWindows.h"
 
+#ifdef XPLATFORM_WINDOWS
+#include "Windows/OpenGLWindows.h"
+#endif
 
 FRHIOpenGLViewport::FRHIOpenGLViewport(class FOpenGLRenderer *InRenderer, void *InWindowHandle, int32_t InSizeX, int32_t InSizeY, bool InbIsFullscreen)
 	: Renderer(InRenderer)

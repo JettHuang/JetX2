@@ -11,7 +11,6 @@
 #include "RendererDefs.h"
 #include "RendererState.h"
 #include "RHIResource.h"
-#include "glm/glm.hpp"
 
 
 enum ERendererType
