@@ -4,7 +4,7 @@
 
 #include <cassert>
 #include "Foundation\JetX.h"
-#include "..\AppFramework\AppWindows.h"
+#include "AppFramework\Application.h"
 #include "Renderer\Renderer.h"
 
 // Shaders
@@ -45,18 +45,19 @@ uint32_t indices[] = {  // Note that we start from 0!
 };
 
 //First Example App
-class FFirstExampleApp : public FPlatformApp
+class FFirstExampleApp : public FApplication, public IWindowClient
 {
 public:
-	virtual void Init() override
+	virtual bool Init() override
 	{
-		FPlatformApp::Init();
+		FApplication::Init();
 
 		LogConsole = new FOutputConsole();
 		assert(LogConsole);
 
-		MainWindow = CreateWindowX("First Example", 500, 500);
+		MainWindow = new FWindow("First Example", 500, 500);
 		assert(MainWindow.IsValidRef());
+		MainWindow->SetWindowClient(this);
 
 		bWasFullscreen = false;
 
@@ -94,7 +95,7 @@ public:
 		InputLayout = GraphicRender->RHICreateVertexInputLayout(Inputs, 2);
 		assert(InputLayout);
 
-
+		return true;
 	}
 
 	virtual void Shutdown() override
@@ -102,18 +103,22 @@ public:
 		Viewport = nullptr;
 		GraphicRender->Shutdown();
 		delete GraphicRender;
-
 		delete LogConsole;
+		MainWindow.SafeRelease();
+
+		FApplication::Shutdown();
 	}
 
-	virtual void OnTick() override
+	virtual void OnTick(float InDeltaSeconds) override
 	{
+		int32_t Width, Height;
 		assert(GraphicRender);
 
 		GraphicRender->RHIBeginFrame();
 		GraphicRender->RHIBeginDrawingViewport(Viewport);
 
-		GraphicRender->RHISetViewport(0, 0, 500, 500, 0.f, 1.f);
+		MainWindow->GetRenderAreaSize(Width, Height);
+		GraphicRender->RHISetViewport(0, 0, Width, Height, 0.f, 1.f);
 		GraphicRender->RHIClear(true, FLinearColor(0.f,0.f,0.f,1.f), true, 1.f, false, 0);
 
 		// setup resource
@@ -127,21 +132,25 @@ public:
 		GraphicRender->RHIEndFrame();
 	}
 
-	virtual void OnKeyDown(FWindow *InWin, EKeyboard::Enum InKey, int32_t InModifier)
+	virtual void OnKeyDown(FWindow &InWin, int32_t InKey, int32_t InScancode, int32_t InModifier) override
 	{
-		if (InKey == EKeyboard::KeyF)
+		switch (InKey)
 		{
-			bWasFullscreen = !bWasFullscreen;
-			SetWindowSize(InWin, 800, 600, false);
+		case GLFW_KEY_ESCAPE:
+			RequestQuit(); break;
+		case GLFW_KEY_C:
+			InWin.CloseWindow(); break;
+		default:
+			break;
 		}
 	}
 
-	virtual void OnCloseWindow(FWindow *InWin) override
+	virtual void OnCloseRequest(FWindow &InWin) override
 	{
-		if (InWin == MainWindow.DeRef())
-		{
-			RequestQuit();
-		}
+		InWin.DestroyWindow();
+		MainWindow.SafeRelease();
+
+		RequestQuit();
 	}
 
 protected:

@@ -96,8 +96,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)..\Src\ThirdParty\assimp\lib_win32;$(SolutionDir)..\Src\ThirdParty\glew\lib_win32;$(SolutionDir)..\Src\ThirdParty\glwf\lib_win32;$(SolutionDir)..\Src\ThirdParty\SOIL\lib_win32</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp.lib;glew32s.lib;opengl32.lib;SOIL.lib;JetXLibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)..\Src\ThirdParty\assimp\lib_win32;$(SolutionDir)..\Src\ThirdParty\glew\lib_win32;$(SolutionDir)..\Src\ThirdParty\glfw\lib_win32;$(SolutionDir)..\Src\ThirdParty\SOIL\lib_win32</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp.lib;glew32s.lib;opengl32.lib;SOIL.lib;glfw3d.lib;JetXLibd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalOptions>/NODEFAULTLIB:libcmt.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
@@ -131,8 +131,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalOptions>/NODEFAULTLIB:libcmt.lib %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>assimp.lib;glew32s.lib;opengl32.lib;SOIL.lib;JetXLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)..\Src\ThirdParty\assimp\lib_win32;$(SolutionDir)..\Src\ThirdParty\glew\lib_win32;$(SolutionDir)..\Src\ThirdParty\glwf\lib_win32;$(SolutionDir)..\Src\ThirdParty\SOIL\lib_win32</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp.lib;glew32s.lib;opengl32.lib;SOIL.lib;JetXLib.lib;glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)..\Src\ThirdParty\assimp\lib_win32;$(SolutionDir)..\Src\ThirdParty\glew\lib_win32;$(SolutionDir)..\Src\ThirdParty\glfw\lib_win32;$(SolutionDir)..\Src\ThirdParty\SOIL\lib_win32</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -153,12 +153,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Src\Examples\AppFramework\AppWindows.cpp" />
     <ClCompile Include="..\..\Src\Examples\FirstExample\FirstExample.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\Src\Examples\AppFramework\AppInterface.h" />
-    <ClInclude Include="..\..\Src\Examples\AppFramework\AppWindows.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -4,7 +4,7 @@
 
 #include <cassert>
 #include "Foundation\JetX.h"
-#include "..\AppFramework\AppWindows.h"
+#include "AppFramework\AppWindows.h"
 #include "Renderer\Renderer.h"
 
 

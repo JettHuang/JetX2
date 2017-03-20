@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\..\Src\Examples\AppFramework\AppWindows.cpp" />
     <ClCompile Include="..\..\Src\Examples\DrawingMesh\DrawingMesh.cpp" />
     <ClCompile Include="..\..\Src\OpenGL\GLBuffer.cpp">
       <Filter>OpenGL</Filter>
@@ -29,8 +28,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Src\Examples\AppFramework\AppInterface.h" />
-    <ClInclude Include="..\..\Src\Examples\AppFramework\AppWindows.h" />
     <ClInclude Include="..\..\Src\OpenGL\GLBuffer.h">
       <Filter>OpenGL</Filter>
     </ClInclude>
