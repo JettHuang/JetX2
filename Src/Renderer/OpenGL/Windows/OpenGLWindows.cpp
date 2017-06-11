@@ -175,6 +175,7 @@ void PlatformReleaseViewportContext(class FOpenGLRenderer* InRenderer, FPlatform
 
 	::ReleaseDC(InContext->WindowHandle, InContext->DeviceContext);
 	InContext->WindowHandle = NULL;
+	delete InContext;
 }
 
 
