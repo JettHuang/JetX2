@@ -8,6 +8,7 @@
 #include <map>
 #include <vector>
 #include "Renderer/Renderer.h"
+#include "PlatformOpenGL.h"
 #include "OpenGLState.h"
 #include "OpenGLDataBuffer.h"
 #include "OpenGLVertexDeclaration.h"
@@ -105,6 +106,10 @@ public:
 	static const char* LookupShaderUniformTypeName(GLenum InType);
 	static const char* LookupErrorCode(GLenum InError);
 
+    // create & release viewport context
+    FPlatformViewportContext* CreateViewportContext(void* InWindowHandle);
+    void ReleaseViewportContext(FPlatformViewportContext* InContext);
+    void ResizeViewportContext(FPlatformViewportContext* InContext, uint32_t SizeX, uint32_t SizeY, bool bFullscreen, bool bWasFullscreen);
 protected:
 	void UpdatePendingRasterizerState(bool bForce=false);
 	void UpdatePendingSamplers(bool bForce=false);
@@ -228,10 +233,10 @@ protected:
 protected:
 	FOutputDevice *Logger;
 
+    class FPlatformOpenGLContext PlatformGLContext;
 	std::vector<class FRHIOpenGLViewport*>	Viewports;
-	class FPlatformOpenGLContext *OpenGLContext;
 	class FRHIOpenGLViewport *ViewportDrawing;
-
+    
 	FRenderContext			RenderContext;
 	FPendingStatesSet		PendingStatesSet;
 

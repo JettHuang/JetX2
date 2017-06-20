@@ -361,6 +361,8 @@ void* FWindow::GetNativeHandle()
 	{
 #ifdef GLFW_EXPOSE_NATIVE_WIN32
 		return glfwGetWin32Window(glfwWindow);
+#elif defined(GLFW_EXPOSE_NATIVE_COCOA)
+        return glfwGetCocoaWindow(glfwWindow);
 #endif
 	}
 

@@ -9,6 +9,8 @@
 #include <new>
 #include "OutputDevice.h"
 
+#if ENABLE_XMEMORY
+
 #pragma push_macro("new")
 #undef new
 
@@ -96,5 +98,6 @@ void operator delete[](void* Ptr, const char* InFile, int InLine, const std::not
 	#define new new(__FILE__, __LINE__)
 #endif
 
+#endif // ENABLE_XMEMORY
 
 #endif // __JETX_MEMORY_H__

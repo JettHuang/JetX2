@@ -3,9 +3,9 @@
 //
 
 #include <cassert>
-#include "Foundation\JetX.h"
-#include "AppFramework\Application.h"
-#include "Renderer\Renderer.h"
+#include "Foundation/JetX.h"
+#include "AppFramework/Application.h"
+#include "Renderer/Renderer.h"
 
 // Shaders
 const char* vertexShaderSource = "#version 330 core\n"

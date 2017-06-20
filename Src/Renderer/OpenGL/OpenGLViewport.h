@@ -10,6 +10,7 @@
 #include "Renderer/RendererDefs.h"
 #include "Renderer/RendererState.h"
 #include "Renderer/RHIResource.h"
+#include "PlatformOpenGL.h"
 
 
 // OpenGL Viewport

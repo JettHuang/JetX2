@@ -184,7 +184,7 @@ FRHISamplerStateRef FOpenGLRenderer::RHICreateSamplerState(const FSamplerStateIn
 	FRHIOpenGLSamplerState *SamplerState = new FRHIOpenGLSamplerState(this);
 	if (SamplerState == nullptr)
 	{
-		return nullptr;
+		return FRHISamplerStateRef();
 	}
 
 	SamplerState->Data.Address_s = TranslateAddressMode(SamplerStateInitializer.AddressS);
@@ -229,7 +229,7 @@ FRHIRasterizerStateRef FOpenGLRenderer::RHICreateRasterizerState(const FRasteriz
 	FRHIOpenGLRasterizerState *RasterizerState = new FRHIOpenGLRasterizerState(this);
 	if (RasterizerState == nullptr)
 	{
-		return nullptr;
+		return FRHIRasterizerStateRef();
 	}
 
 	RasterizerState->Data.FillMode = TranslateFillMode(RasterizerStateInitializer.FillMode);
@@ -256,7 +256,7 @@ FRHIDepthStencilStateRef FOpenGLRenderer::RHICreateDepthStencilState(const FDept
 	FRHIOpenGLDepthStencilState *DepthStencilState = new FRHIOpenGLDepthStencilState(this);
 	if (DepthStencilState == nullptr)
 	{
-		return nullptr;
+		return FRHIDepthStencilStateRef();
 	}
 
 	DepthStencilState->Data.bEnableZTest = (DepthStencilStateInitializer.DepthTestFunc != CF_Always) || DepthStencilStateInitializer.bEnableDepthWrite;
@@ -293,7 +293,7 @@ FRHIBlendStateRef FOpenGLRenderer::RHICreateBlendState(const FBlendStateInitiali
 	FRHIOpenGLBlendState *BlendState = new FRHIOpenGLBlendState(this);
 	if (BlendState == nullptr)
 	{
-		return nullptr;
+		return FRHIBlendStateRef();
 	}
 
 	const uint32_t kMaxRenderTargets = (std::min)(BlendStateInitializer.TargetsNum, (uint32_t)MaxSimultaneousRenderTargets);

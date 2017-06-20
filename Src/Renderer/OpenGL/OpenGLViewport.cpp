@@ -5,9 +5,6 @@
 #include "OpenGLViewport.h"
 #include "OpenGLRenderer.h"
 
-#ifdef XPLATFORM_WINDOWS
-#include "Windows/OpenGLWindows.h"
-#endif
 
 FRHIOpenGLViewport::FRHIOpenGLViewport(class FOpenGLRenderer *InRenderer, void *InWindowHandle, int32_t InSizeX, int32_t InSizeY, bool InbIsFullscreen)
 	: Renderer(InRenderer)
@@ -17,7 +14,7 @@ FRHIOpenGLViewport::FRHIOpenGLViewport(class FOpenGLRenderer *InRenderer, void *
 	, bIsFullscreen(false)
 {
 	Renderer->AddViewport(this);
-	ViewportContext = PlatformCreateViewportContext(InRenderer, InWindowHandle);
+	ViewportContext = InRenderer->CreateViewportContext(InWindowHandle);
 	Resize(InSizeX, InSizeY, InbIsFullscreen);
 }
 
@@ -28,7 +25,7 @@ FRHIOpenGLViewport::~FRHIOpenGLViewport()
 		PlatformRestoreDesktopDisplayMode();
 	}
 
-	PlatformReleaseViewportContext(Renderer, ViewportContext);
+	Renderer->ReleaseViewportContext(ViewportContext);
 	ViewportContext = nullptr;
 	Renderer->RemoveViewport(this);
 }
@@ -40,7 +37,7 @@ void FRHIOpenGLViewport::Resize(uint32_t InSizeX, uint32_t InSizeY, bool InbIsFu
 		return;
 	}
 
-	PlatformResizeGLContext(Renderer, ViewportContext, InSizeX, InSizeY, InbIsFullscreen, bIsFullscreen);
+	Renderer->ResizeViewportContext(ViewportContext, InSizeX, InSizeY, InbIsFullscreen, bIsFullscreen);
 	SizeX = InSizeX;
 	SizeY = InSizeY;
 	bIsFullscreen = InbIsFullscreen;

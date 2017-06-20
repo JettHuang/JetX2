@@ -5,66 +5,65 @@
 #ifndef __JETX_OPENGL_MAC_H__
 #define __JETX_OPENGL_MAC_H__
 
+#include "glew.h"
+#include "RendererDefs.h"
 
-@class FCocoaOpenGLView;
-@class NSOpenGLContext;
-@class NSWindow;
+
+#if defined(__OBJC__)
+#import <Carbon/Carbon.h>
+#import <Cocoa/Cocoa.h>
+#else
+#include <Carbon/Carbon.h>
+#include <ApplicationServices/ApplicationServices.h>
+typedef void* id;
+#endif
+
+
+#define	OPENGL_MAJOR_VERSION	4
+#define OPENGL_MINOR_VERSION	1
+
 
 class FPlatformOpenGLContext
 {
 public:
-	FPlatformOpenGLContext();
-	~FPlatformOpenGLContext();
-
-	void Initialise(NSOpenGLContext* const SharedContext);
-	void Reset();
-	void MakeCurrent();
-
-	static void VerifyCurrentContext();
-	static void RegisterGraphicsSwitchingCallback();
-	static void UnregisterGraphicsSwitchingCallback();
-
-	/** Underlying OpenGL context and its pixel format. */
-	NSOpenGLContext*		OpenGLContext;
-	NSOpenGLPixelFormat*	OpenGLPixelFormat;
-
-	// Window Management
-	/** Currently bound Cocoa view - nil for offscreen only contexts */
-	FCocoaOpenGLView*		OpenGLView;
-	/** Owning window - nil for offscreen only contexts */
-	NSWindow*				WindowHandle;
-
-	// Mac OpenGL Timestamp Query emulation
-	/** Emulated queries */
-	FMacOpenGLQueryEmu*		EmulatedQueries;
-
-	// OpenGL Resources
-	/** Required vertex array object. */
-	GLuint					VertexArrayObject;
-	/** Output Framebuffer */
-	GLuint					ViewportFramebuffer;
-	/** Output render buffer */
-	GLuint					ViewportRenderbuffer;
-	/** Cached viewport render buffer dimensions */
-	int32					ViewportSize[2];
-
-	// Context Settings
-	/** Flush Synchronisation Interval (V-Sync) */
-	int32					SyncInterval;
-	/** Virtual Screen */
-	GLint					VirtualScreen;
-
-	// Context Renderer Details
-	/** Device Vendor ID */
-	uint32					VendorID;
-	/** Renderer ID */
-	GLint					RendererID;
-	/** Renderer Index */
-	int32					RendererIndex;
-	/** Whether the renderer supports depth-fetch during depth-test */
-	bool					SupportsDepthFetchDuringDepthTest;
+    id  PixelFormat;
+    id	OpenGLContext;
+    
+    FPlatformOpenGLContext()
+    : PixelFormat(nil)
+    , OpenGLContext(nil)
+    {}
 };
 
+class FPlatformViewportContext
+{
+public:
+    id	cocoaWindow;
 
+    FPlatformViewportContext()
+    : cocoaWindow(nil)
+    {}
+};
+
+// init the GL context
+bool PlatformInitializeOpenGLContext(FPlatformOpenGLContext &InGLConext);
+void PlatformShutdownOpenGLContext(FPlatformOpenGLContext &InGLContext);
+
+// create & release viewport context
+FPlatformViewportContext* PlatformCreateViewportContext(FPlatformOpenGLContext &InGLContext, void* InWindowHandle);
+void PlatformReleaseViewportContext(FPlatformOpenGLContext &InGLContext, FPlatformViewportContext* InContext);
+
+// fullscreen operations
+void PlatformRestoreDesktopDisplayMode();
+void PlatformResizeGLContext(FPlatformOpenGLContext &InGLContext, FPlatformViewportContext* InContext, uint32_t SizeX, uint32_t SizeY, bool bFullscreen, bool bWasFullscreen);
+
+void PlatformGetSupportedResolution(uint32_t &Width, uint32_t &Height);
+bool PlatformGetAvailableResolutions(FScreenResolutionArray& Resolutions, bool bIgnoreRefreshRate);
+
+// active viewport context
+void PlatformActiveViewportContext(FPlatformOpenGLContext &InOpenGLContext, FPlatformViewportContext *InViewportCtx);
+
+// platform swapbuffers
+void PlatformSwapBuffers(FPlatformOpenGLContext &InOpenGLContext, FPlatformViewportContext *InViewportCtx);
 
 #endif //__JETX_OPENGL_MAC_H__

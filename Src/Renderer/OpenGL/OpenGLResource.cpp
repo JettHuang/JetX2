@@ -17,7 +17,7 @@ FRHIVertexBufferRef FOpenGLRenderer::RHICreateVertexBuffer(uint32_t InBytes, con
 	}
 
 	delete VBuffer;
-	return nullptr;
+	return FRHIVertexBufferRef();
 }
 
 FRHIIndexBufferRef FOpenGLRenderer::RHICreateIndexBuffer(uint32_t InBytes, const void *InData, uint16_t InStride, EBufferAccess InAccess, EBufferUsage InUsage)
@@ -29,7 +29,7 @@ FRHIIndexBufferRef FOpenGLRenderer::RHICreateIndexBuffer(uint32_t InBytes, const
 	}
 
 	delete IBuffer;
-	return nullptr;
+	return FRHIIndexBufferRef();
 }
 
 void FOpenGLRenderer::FillDataBuffer(FRHIDataBufferRef InBuffer, uint32_t InOffset, uint32_t InBytes, const void *InData)
@@ -82,7 +82,7 @@ FRHIGPUProgramRef FOpenGLRenderer::RHICreateGPUProgram(const FRHIVertexShaderRef
 	FRHIOpenGLGPUProgram *GPUProgram = new FRHIOpenGLGPUProgram(this);
 	if (!GPUProgram)
 	{
-		return nullptr;
+		return FRHIGPUProgramRef();
 	}
 
 	GPUProgram->AddShader(InVShader.DeRef());
@@ -100,7 +100,7 @@ FRHIGPUProgramRef FOpenGLRenderer::RHICreateGPUProgram(const std::vector<FRHISha
 	FRHIOpenGLGPUProgram *GPUProgram = new FRHIOpenGLGPUProgram(this);
 	if (!GPUProgram)
 	{
-		return nullptr;
+		return FRHIGPUProgramRef();
 	}
 
 	for (uint32_t Index = 0; Index < InShaders.size(); Index++)

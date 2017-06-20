@@ -7,7 +7,7 @@
 
 #include "Renderer/RendererDefs.h"
 #include "Renderer/RHIResource.h"
-#include "glew.h"
+#include "PlatformOpenGL.h"
 
 
 // GL vertex element

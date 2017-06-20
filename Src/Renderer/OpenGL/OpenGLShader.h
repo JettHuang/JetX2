@@ -9,7 +9,7 @@
 #include "Foundation/OutputDevice.h"
 #include "Renderer/RendererDefs.h"
 #include "Renderer/RHIResource.h"
-#include "glew.h"
+#include "PlatformOpenGL.h"
 
 #include <vector>
 

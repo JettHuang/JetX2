@@ -13,6 +13,9 @@
 #define GLFW_EXPOSE_NATIVE_WIN32
 #define GLFW_EXPOSE_NATIVE_WGL
 #endif
+#ifdef XPLATFORM_MACOSX
+#define GLFW_EXPOSE_NATIVE_COCOA
+#endif
 
 #include "glfw3.h"
 #include "glfw3native.h"

@@ -147,10 +147,8 @@ void PlatformShutdownOpenGLContext(FPlatformOpenGLContext &InGLContext)
 }
 
 // create & release viewport context
-FPlatformViewportContext* PlatformCreateViewportContext(class FOpenGLRenderer* InRenderer, void* InWindowHandle)
+FPlatformViewportContext* PlatformCreateViewportContext(FPlatformOpenGLContext &InGLContext, void* InWindowHandle)
 {
-	assert(InRenderer);
-
 	FPlatformViewportContext *Context = new FPlatformViewportContext();
 	Context->WindowHandle = (HWND)InWindowHandle;
 	Context->DeviceContext = ::GetDC(Context->WindowHandle);
@@ -161,9 +159,9 @@ FPlatformViewportContext* PlatformCreateViewportContext(class FOpenGLRenderer* I
 	return Context;
 }
 
-void PlatformReleaseViewportContext(class FOpenGLRenderer* InRenderer, FPlatformViewportContext* InContext)
+void PlatformReleaseViewportContext(FPlatformOpenGLContext &InGLContext, FPlatformViewportContext* InContext)
 {
-	assert(InRenderer && InContext);
+	assert(InContext);
 
 	HDC CurrentDC = wglGetCurrentDC();
 	bool bActived = (CurrentDC == InContext->DeviceContext);
@@ -188,7 +186,7 @@ void PlatformRestoreDesktopDisplayMode()
 /**
 * Resize the GL context.
 */
-void PlatformResizeGLContext(class FOpenGLRenderer* InRenderer, FPlatformViewportContext* InContext, uint32_t SizeX, uint32_t SizeY, bool bFullscreen, bool bWasFullscreen)
+void PlatformResizeGLContext(FPlatformOpenGLContext &InGLContext, FPlatformViewportContext* InContext, uint32_t SizeX, uint32_t SizeY, bool bFullscreen, bool bWasFullscreen)
 {
 }
 
@@ -296,16 +294,17 @@ bool PlatformGetAvailableResolutions(FScreenResolutionArray& Resolutions, bool b
 
 
 // active viewport context
-void PlatformActiveViewportContext(FPlatformOpenGLContext *InOpenGLContext, FPlatformViewportContext *InViewportCtx)
+void PlatformActiveViewportContext(FPlatformOpenGLContext &InGLContext, FPlatformViewportContext *InViewportCtx)
 {
-	assert(InOpenGLContext);
 	assert(InViewportCtx);
 	
-	wglMakeCurrent(InViewportCtx->DeviceContext, InOpenGLContext->OpenGLContext);
+	wglMakeCurrent(InViewportCtx->DeviceContext, InGLContext.OpenGLContext);
 }
 
-void PlatformSwapBuffers(FPlatformOpenGLContext *InOpenGLContext, FPlatformViewportContext *InViewportCtx)
+void PlatformSwapBuffers(FPlatformOpenGLContext &InGLContext, FPlatformViewportContext *InViewportCtx)
 {
 	assert(InViewportCtx);
 	::SwapBuffers(InViewportCtx->DeviceContext);
 }
+
+

@@ -6,6 +6,8 @@
 #include <cassert>
 #include "XMemory.h"
 
+#if ENABLE_XMEMORY
+
 #undef new
 
 //////////////////////////////////////////////////////////////////////////
@@ -180,3 +182,6 @@ void operator delete[](void* Ptr, const char* InFile, int InLine, const std::not
 }
 
 #pragma pop_macro("new")
+
+#endif // ENABLE_XMEMORY
+

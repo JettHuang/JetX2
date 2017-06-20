@@ -5,25 +5,18 @@
 #include <cassert>
 #include <algorithm>
 
+#include "PlatformOpenGL.h"
 #include "OpenGLRenderer.h"
 #include "OpenGLState.h"
 #include "OpenGLViewport.h"
 
-#ifdef XPLATFORM_WINDOWS
-#include "Windows\OpenGLWindows.h"
-#endif
-
-
-
-static FPlatformOpenGLContext s_OpenGLContext;
 
 //Init
 void FOpenGLRenderer::Init(FOutputDevice *LogOutputDevice)
 {
 	Logger = LogOutputDevice;
 
-	OpenGLContext = &s_OpenGLContext;
-	PlatformInitializeOpenGLContext(*OpenGLContext);
+	PlatformInitializeOpenGLContext(PlatformGLContext);
 	ViewportDrawing = nullptr;
 
 	if (Logger)
@@ -149,7 +142,7 @@ void FOpenGLRenderer::Shutdown()
 	PendingStatesSet.VertexDecl.SafeRelease();
 	RenderContext.GPUProgram.SafeRelease();
 
-	PlatformShutdownOpenGLContext(*OpenGLContext);
+	PlatformShutdownOpenGLContext(PlatformGLContext);
 	ViewportDrawing = nullptr;
 }
 
@@ -184,6 +177,22 @@ void FOpenGLRenderer::RemoveViewport(class FRHIOpenGLViewport *InViewport)
 			break;
 		}
 	} // end for
+}
+
+// create & release viewport context
+FPlatformViewportContext* FOpenGLRenderer::CreateViewportContext(void* InWindowHandle)
+{
+    return PlatformCreateViewportContext(PlatformGLContext, InWindowHandle);
+}
+
+void FOpenGLRenderer::ReleaseViewportContext(FPlatformViewportContext* InContext)
+{
+    PlatformReleaseViewportContext(PlatformGLContext, InContext);
+}
+
+void FOpenGLRenderer::ResizeViewportContext(FPlatformViewportContext* InContext, uint32_t SizeX, uint32_t SizeY, bool bFullscreen, bool bWasFullscreen)
+{
+    PlatformResizeGLContext(PlatformGLContext, InContext, SizeX, SizeY, bFullscreen, bWasFullscreen);
 }
 
 //render viewport
@@ -227,7 +236,7 @@ void FOpenGLRenderer::RHIBeginDrawingViewport(FRHIViewportRef Viewport)
 
 	if (GLViewport != ViewportDrawing)
 	{
-		PlatformActiveViewportContext(OpenGLContext, GLViewport->GetViewportContext());
+		PlatformActiveViewportContext(PlatformGLContext, GLViewport->GetViewportContext());
 		ViewportDrawing = GLViewport;
 	}
 }
@@ -241,7 +250,7 @@ void FOpenGLRenderer::RHIEndDrawingViewport(FRHIViewportRef Viewport, bool bPres
 	assert(ViewportDrawing == GLViewport);
 
 	glFlush();
-	PlatformSwapBuffers(OpenGLContext, GLViewport->GetViewportContext());
+	PlatformSwapBuffers(PlatformGLContext, GLViewport->GetViewportContext());
 }
 
 void FOpenGLRenderer::RHIBeginFrame()
@@ -938,7 +947,7 @@ const char* FOpenGLRenderer::LookupShaderUniformTypeName(GLenum InType)
 		DEF_TYPENAME_PAIR(GL_UNSIGNED_INT_ATOMIC_COUNTER)
 	};
 
-	for (GLint Index = 0; Index < DEF_ARRAYCOUNT(kTypeNames); Index++)
+	for (GLuint Index = 0; Index < DEF_ARRAYCOUNT(kTypeNames); Index++)
 	{
 		const FTypeNamePair &Element = kTypeNames[Index];
 		if (Element.Type == InType)
@@ -964,7 +973,7 @@ const char* FOpenGLRenderer::LookupErrorCode(GLenum InError)
 		DEF_TYPENAME_PAIR(GL_STACK_OVERFLOW)
 	};
 
-	for (GLint Index = 0; Index < DEF_ARRAYCOUNT(kTypeNames); Index++)
+	for (GLuint Index = 0; Index < DEF_ARRAYCOUNT(kTypeNames); Index++)
 	{
 		const FTypeNamePair &Element = kTypeNames[Index];
 		if (Element.Type == InError)

@@ -41,20 +41,20 @@ bool PlatformInitializeOpenGLContext(FPlatformOpenGLContext &InGLConext);
 void PlatformShutdownOpenGLContext(FPlatformOpenGLContext &InGLContext);
 
 // create & release viewport context
-FPlatformViewportContext* PlatformCreateViewportContext(class FOpenGLRenderer* InRenderer, void* InWindowHandle);
-void PlatformReleaseViewportContext(class FOpenGLRenderer* InRenderer, FPlatformViewportContext* InContext);
+FPlatformViewportContext* PlatformCreateViewportContext(FPlatformOpenGLContext &InGLContext, void* InWindowHandle);
+void PlatformReleaseViewportContext(FPlatformOpenGLContext &InGLContext, FPlatformViewportContext* InContext);
 
 // fullscreen operations
 void PlatformRestoreDesktopDisplayMode();
-void PlatformResizeGLContext(class FOpenGLRenderer* InRenderer, FPlatformViewportContext* InContext, uint32_t SizeX, uint32_t SizeY, bool bFullscreen, bool bWasFullscreen);
+void PlatformResizeGLContext(FPlatformOpenGLContext &InGLContext, FPlatformViewportContext* InContext, uint32_t SizeX, uint32_t SizeY, bool bFullscreen, bool bWasFullscreen);
 
 void PlatformGetSupportedResolution(uint32_t &Width, uint32_t &Height);
 bool PlatformGetAvailableResolutions(FScreenResolutionArray& Resolutions, bool bIgnoreRefreshRate);
 
 // active viewport context
-void PlatformActiveViewportContext(FPlatformOpenGLContext *InOpenGLContext, FPlatformViewportContext *InViewportCtx);
+void PlatformActiveViewportContext(FPlatformOpenGLContext &InGLContext, FPlatformViewportContext *InViewportCtx);
 
 // platform swapbuffers
-void PlatformSwapBuffers(FPlatformOpenGLContext *InOpenGLContext, FPlatformViewportContext *InViewportCtx);
+void PlatformSwapBuffers(FPlatformOpenGLContext &InGLContext, FPlatformViewportContext *InViewportCtx);
 
 #endif // __JETX_OPENGL_WINDOWS_H__

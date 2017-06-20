@@ -254,7 +254,7 @@ struct FScreenResolution
 	uint32_t	Height;
 	uint32_t	RefreshRate;
 
-	bool operator <(const FScreenResolution &rhs)
+	bool operator <(const FScreenResolution &rhs) const
 	{
 		if (Width != rhs.Width)
 		{

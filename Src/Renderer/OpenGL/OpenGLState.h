@@ -8,7 +8,7 @@
 #include "Renderer/RendererDefs.h"
 #include "Renderer/RendererState.h"
 #include "Renderer/RHIResource.h"
-#include "glew.h"
+#include "PlatformOpenGL.h"
 
 
 // GL sampler state

@@ -7,6 +7,11 @@ workspace "JetXAll"
     language "C++"
     architecture "x86"
     
+	-- Catch requires RTTI and exceptions
+	exceptionhandling "On"
+	rtti "On"
+
+
     filter "configurations:Debug"
         defines { "DEBUG" }
         symbols "On"
@@ -21,6 +26,7 @@ workspace "JetXAll"
 
     filter "system:macosx"
         defines { "XPLATFORM_MACOSX" }
+        buildoptions { "-Wunused-value -Wshadow -Wreorder -Wsign-compare -Wall" }
 
     filter {}
 
@@ -45,14 +51,14 @@ function Link_Thirparty()
 
     filter { "system:macosx" }
         libdirs {
-            "../Src/ThirdParty/glew/lib_mac",
-            "../Src/ThirdParty/glfw/lib_mac"
+            "../Src/ThirdParty/glew/lib_osx",
+            "../Src/ThirdParty/glfw/lib_osx"
         }
 
     filter { "kind:not StaticLib"}
         links {
             "glfw3",
-            "glew32s"
+            "GLEW"
         }
 
     filter {}
@@ -85,7 +91,6 @@ project "JetXEngine"
         "../Src/Renderer/OpenGL/OpenGLCommand.cpp",
         "../Src/Renderer/OpenGL/OpenGLDataBuffer.cpp",
         "../Src/Renderer/OpenGL/OpenGLDataBuffer.h",
-        "../Src/Renderer/OpenGL/OpenGLHeaders.h",
         "../Src/Renderer/OpenGL/OpenGLRenderer.h",
         "../Src/Renderer/OpenGL/OpenGLRenderer.cpp",
         "../Src/Renderer/OpenGL/OpenGLResource.cpp",
@@ -97,6 +102,7 @@ project "JetXEngine"
         "../Src/Renderer/OpenGL/OpenGLVertexDeclaration.cpp",
         "../Src/Renderer/OpenGL/OpenGLViewport.h",
         "../Src/Renderer/OpenGL/OpenGLViewport.cpp",
+        "../Src/Renderer/OpenGL/PlatformOpenGL.h",
     }
     -- platform dependency files
     filter "system:windows"
@@ -108,7 +114,7 @@ project "JetXEngine"
     filter "system:macosx"
         files {
             "../Src/Renderer/OpenGL/Mac/OpenGLMac.h",
-            "../Src/Renderer/OpenGL/Mac/OpenGLMac.cpp",
+            "../Src/Renderer/OpenGL/Mac/OpenGLMac.mm",
         }
 
     filter {}
@@ -135,7 +141,12 @@ function Configure_JetXEngine()
     filter { "system:windows" }
         links { "OpenGL32" }
     filter { "system:not windows" }
-        links { "GL" }
+        links { "OpenGL.framework",
+				"Cocoa.framework",
+				"IOKit.framework",
+				"CoreFoundation.framework",
+				"CoreVideo.framework" 
+			}
     filter {}
 
 end
