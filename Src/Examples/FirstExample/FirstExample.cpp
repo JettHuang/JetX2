@@ -147,11 +147,20 @@ public:
 
 	virtual void OnCloseRequest(FWindow &InWin) override
 	{
+        Viewport = nullptr;
+        
 		InWin.DestroyWindow();
 		MainWindow.SafeRelease();
 
 		RequestQuit();
 	}
+    
+    virtual void OnSizeChanged(FWindow &InWin, int32_t InWidth, int32_t InHeight) override
+    {
+        //GraphicRender->RHISetViewport(0, 0, InWidth, InHeight, 0.f, 1.f);
+        LogConsole->Log(Log_Info, "OnSizeChanged: width=%d, height=%d", InWidth, InHeight);
+    }
+    
 
 protected:
 	FWindowRef	MainWindow;

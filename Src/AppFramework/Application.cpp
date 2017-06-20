@@ -341,7 +341,7 @@ void FWindow::GetRenderAreaSize(int32_t &Width, int32_t &Height)
 	Width = Height = 0;
 	if (glfwWindow)
 	{
-		glfwGetFramebufferSize(glfwWindow, &Width, &Height);
+		glfwGetWindowSize(glfwWindow, &Width, &Height);
 	}
 }
 
